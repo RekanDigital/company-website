@@ -27,7 +27,7 @@ Full cross-phase project backlog and lifecycle tracking is authoritatively maint
 
 | PhaseID | TaskID | TaskDescription | Owner | Status | Priority | StartDate | DueDate | CommitLink | DocLink | Sprint |
 |---|---|---|---|---|---|---|---|---|---|---|
-| P0 | T0.2 | Operational PM Baseline Setup (`project-state.md`, `README.md`, `.gitignore`) | Antigravity | Done | High | 2026-10-06 | 2026-10-06 | — | [`GEMINI.md`](file:///home/sigisgood/rekanmu/company-website/GEMINI.md) | Sprint 1 |
+| P0 | T0.2 | Operational PM Baseline Setup (`project-state.md`, `README.md`, `.gitignore`) | Antigravity | Done | High | 2026-10-06 | 2026-10-06 | [`77404c3`](https://github.com/RekanDigital/company-website/commit/77404c3) | [`GEMINI.md`](file:///home/sigisgood/rekanmu/company-website/GEMINI.md) | Sprint 1 |
 | P1 | T1.1 | Project Scaffolding (Next.js, TS, Tailwind v4, pnpm, Geist font setup) | Codex | Ready | High | 2026-10-06 | 2026-10-07 | — | [`TECH-STACK.md`](file:///home/sigisgood/rekanmu/company-website/TECH-STACK.md) | Sprint 1 |
 | P1 | T1.2 | Design Tokens Integration (`tokens.css` into Tailwind theme, layout primitives) | Codex | Pending | High | 2026-10-07 | 2026-10-08 | — | [`design-docs/tokens/`](file:///home/sigisgood/rekanmu/company-website/design-docs/tokens/) | Sprint 1 |
 | P2 | T2.1 | Shell Build (Header, Footer with point-field hover, Menu Overlay, Closing Card) | Codex | Pending | High | 2026-10-08 | 2026-10-10 | — | [`design-docs/pages/menu.html`](file:///home/sigisgood/rekanmu/company-website/design-docs/pages/menu.html) | Sprint 1 |
