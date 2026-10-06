@@ -1,10 +1,10 @@
 # Project State — RekanMU Company Profile Website
 
-**Last Updated:** 2026-10-06  
-**Current Phase:** Phase 1 — Engineering Handoff & Foundation Scaffolding  
-**Current Sprint:** Sprint 1 (Foundation Scaffolding & Shell)  
-**PM Status:** Active / Baseline Established  
-**Engineering Focus:** Project scaffolding (Next.js App Router, TypeScript, Tailwind CSS v4, pnpm), font integration (Geist / Geist Mono), token ingestion from `design-docs/tokens/`.  
+**Last Updated:** 2026-10-07  
+**Current Phase:** Phase 2 — Foundation Build & Interactive Assembly  
+**Current Sprint:** Sprint 2 (Static Page Assembly & Interactive Foundations)  
+**PM Status:** Active / Sprint 1 Accepted  
+**Engineering Focus:** Static page assembly for `/about`, `/products-services`, `/businesses`, and `/businesses/[slug]` templates with approved bilingual content, followed by Home sliding section and Businesses WebGL hero.  
 **Active Blockers:** None.
 
 ---
@@ -21,26 +21,23 @@
 
 ---
 
-## 2. Active Sprint: Sprint 1 (Foundation Scaffolding & Shell)
+## 2. Active Sprint: Sprint 2 (Static Page Assembly & Interactive Foundations)
 
 Full cross-phase project backlog and lifecycle tracking is authoritatively maintained in the [Drive Project Tracker](https://drive.google.com/file/d/1NjRTjkLEQkQjgCYh6O5lkYzaJ2cUcnvp/view?usp=drivesdk). Only current active sprint tasks are tracked in repository state.
 
 | PhaseID | TaskID | TaskDescription | Owner | Status | Priority | StartDate | DueDate | CommitLink | DocLink | Sprint |
 |---|---|---|---|---|---|---|---|---|---|---|
-| P0 | T0.2 | Operational PM Baseline Setup (`project-state.md`, `README.md`, `.gitignore`) | Antigravity | Done | High | 2026-10-06 | 2026-10-06 | [`77404c3`](https://github.com/RekanDigital/company-website/commit/77404c3) | [`GEMINI.md`](file:///home/sigisgood/rekanmu/company-website/GEMINI.md) | Sprint 1 |
-| P1 | T1.1 | Project Scaffolding (Next.js, TS, Tailwind v4, pnpm, Geist font setup) | Codex | Ready | High | 2026-10-06 | 2026-10-07 | — | [`TECH-STACK.md`](file:///home/sigisgood/rekanmu/company-website/TECH-STACK.md) | Sprint 1 |
-| P1 | T1.2 | Design Tokens Integration (`tokens.css` into Tailwind theme, layout primitives) | Codex | Pending | High | 2026-10-07 | 2026-10-08 | — | [`design-docs/tokens/`](file:///home/sigisgood/rekanmu/company-website/design-docs/tokens/) | Sprint 1 |
-| P2 | T2.1 | Shell Build (Header, Footer with point-field hover, Menu Overlay, Closing Card) | Codex | Pending | High | 2026-10-08 | 2026-10-10 | — | [`design-docs/pages/menu.html`](file:///home/sigisgood/rekanmu/company-website/design-docs/pages/menu.html) | Sprint 1 |
-| P2 | T2.2 | Core UI Component Suite (Button, Roll link, Tag, Point type, Ruled list, Business plate) | Codex | Pending | High | 2026-10-10 | 2026-10-12 | — | [`design-docs/components/`](file:///home/sigisgood/rekanmu/company-website/design-docs/components/) | Sprint 1 |
+| P2 | T2.3 | Static Page Assembly (About, Products & Services catalogue, Businesses list, Business detail template) | Codex | Ready | High | 2026-10-07 | 2026-10-10 | — | [`plans/page-maps/`](file:///home/sigisgood/rekanmu/company-website/plans/page-maps/) | Sprint 2 |
+| P3 | T3.1 | Home Sliding Products & Services Section & Partners Marquee | Codex | Pending | Medium | 2026-10-10 | 2026-10-12 | — | [`design-docs/prototypes/`](file:///home/sigisgood/rekanmu/company-website/design-docs/prototypes/) | Sprint 2 |
+| P3 | T3.2 | Businesses Hero Live Point Renderer (Plain WebGL, binary point asset) | Codex | Pending | High | 2026-10-12 | 2026-10-15 | — | [`design-docs/prototypes/businesses-hero.source.js`](file:///home/sigisgood/rekanmu/company-website/design-docs/prototypes/businesses-hero.source.js) | Sprint 2 |
 
 ---
 
 ## 3. Recent Verified Changes
 
-- **2026-10-06:** Baseline design handoff received and verified under `design-docs/`.
-- **2026-10-06:** Integration lock completed (resolved progress indicator removal, footer copy lock to "Start a Conversation", catalogue stream count computation, partner logo assets, and Three.js vs Plain WebGL boundary).
-- **2026-10-06:** Established operational repository PM baseline (`project-state.md`, `README.md`, `.gitignore`).
-- **2026-10-06:** Synchronized master project tracker into Google Drive ([`rekanmu-website_ProjectTracker`](https://drive.google.com/file/d/1NjRTjkLEQkQjgCYh6O5lkYzaJ2cUcnvp/view?usp=drivesdk)); repository state focused on Sprint 1.
+- **2026-10-07:** Sprint 1 engineering foundation verified and accepted ([`d4eb7f9`](https://github.com/RekanDigital/company-website/commit/d4eb7f9)). Next.js 16 App Router, Tailwind v4, Geist fonts, tokens, responsive shell, and UI component suite fully verified across 24 SSG pages and 34 passing Playwright test suites (0 failures).
+- **2026-10-07:** Master Drive project tracker synchronized; Sprint 1 tasks (T1.1, T1.2, T2.1, T2.2) marked Done (overall project completion 46.2%). Sprint 2 active.
+- **2026-10-06:** Baseline design handoff received, integration locked, operational PM baseline established, cloud repository initialized at `RekanDigital/company-website`.
 
 ---
 
