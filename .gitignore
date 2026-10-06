@@ -40,3 +40,12 @@ Thumbs.db
 # TypeScript build cache
 *.tsbuildinfo
 next-env.d.ts
+
+# Rekan Digital Drive Boundary (Authoritative in Google Drive)
+design-docs/
+plans/
+resources/
+AGENTS.md
+GEMINI.md
+PROJECT-BRIEF.md
+TECH-STACK.md
