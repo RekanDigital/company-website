@@ -38,9 +38,6 @@ img { max-width: 100%; }
 .row { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 8px 32px; padding-block: 22px; border-bottom: var(--rule-quiet); align-items: baseline; }
 .dots, .point-type, .closing-card h2 { --dot-pitch: 0.055em; --dot-radius: max(0.5px, 0.009em); --dot-edge: max(0.72px, 0.014em); }
 .dots, .point-type { color: transparent; background-image: radial-gradient(circle at center, var(--ink) 0 var(--dot-radius), transparent var(--dot-edge)); background-size: var(--dot-pitch) var(--dot-pitch); background-clip: text; -webkit-background-clip: text; }
-@media (min-width: 821px) {
-  .dots, .point-type, .closing-card h2 { --dot-pitch: 5px; --dot-radius: 1.3px; --dot-edge: 1.7px; }
-}
 .num { font-size: var(--fs-figure); line-height: var(--lh-figure); letter-spacing: var(--ls-figure); font-weight: var(--fw-medium); }
 .mono { font-family: var(--font-geist-mono), monospace; font-size: var(--fs-label); letter-spacing: var(--ls-label); text-transform: uppercase; }
 .disp { font-size: var(--fs-display); line-height: var(--lh-display); letter-spacing: var(--ls-display); font-weight: var(--fw-medium); }

@@ -238,6 +238,21 @@
   margin-top: 32px;
 }
 
+@media (min-width: 901px) {
+  .foundationHero:not(.homeHero) h1 {
+    font-size: min(9.2vw, 13.4svh);
+  }
+
+  .foundationHero.homeHero {
+    padding-block: clamp(24px, 5svh, 56px);
+  }
+
+  .foundationHero.homeHero h1 {
+    width: calc(68vw - min(20svh, 15vw) - var(--gutter));
+    font-size: min(9.2vw, 13.4svh);
+  }
+}
+
 .componentPreview {
   border-top: var(--rule);
 }

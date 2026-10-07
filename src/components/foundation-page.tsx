@@ -1,7 +1,18 @@
 import { localizeHref, type Locale } from "@/content/site";
 import { pageHeroes, type PagePath } from "@/content/pages";
+import { businessPages, homeProductStreams } from "@/content/static-pages";
+import { homeCatalogueCopy } from "@/content/home";
 
 import { ClosingCard } from "./closing-card";
+import { BusinessesHero } from "./businesses-hero";
+import { HomeCatalogue } from "./home-catalogue";
+import {
+  AboutPageBody,
+  BusinessDetailBody,
+  BusinessHeroArt,
+  BusinessesPageBody,
+  ProductsPageBody,
+} from "./static-pages";
 import {
   BusinessPlate,
   ButtonLink,
@@ -153,31 +164,49 @@ export function FoundationPage({
 }) {
   const hero = pageHeroes[path as PagePath][locale];
   const hasClosingCard = path === "/" || path === "/about" || path === "/businesses";
+  const businessesOverview = path === "/businesses";
+  const business = businessPages.find((item) => path === `/businesses/${item.slug}`);
 
   return (
     <>
-      <section className="foundationHero gut">
-        <h1 className="disp">
-          {hero.title.solid}
-          <br />
-          <PointType>{hero.title.point}</PointType>
-        </h1>
+      {businessesOverview ? (
+        <BusinessesHero title={hero.title} sites={businessPages.map(({ slug, name }) => ({ slug, name }))} />
+      ) : (
+        <section className={`foundationHero gut${path === "/" ? " homeHero" : ""}${business ? " businessDetailHero" : ""}`}>
+          {business ? <BusinessHeroArt business={business} /> : null}
+          <h1 className="disp">
+            {hero.title.solid}
+            <br />
+            <PointType>{hero.title.point}</PointType>
+          </h1>
 
-        {hero.tagline || hero.lead ? (
-          <div className="split foundationHeroCopy">
-            {hero.tagline ? <h2 className="h3">{hero.tagline}</h2> : null}
-            {hero.lead ? <p className="lead">{hero.lead}</p> : null}
-          </div>
-        ) : null}
+          {hero.tagline || hero.lead ? (
+            <div className="split foundationHeroCopy">
+              {hero.tagline ? <h2 className="h3">{hero.tagline}</h2> : null}
+              {hero.lead ? <p className="lead">{hero.lead}</p> : null}
+            </div>
+          ) : null}
 
-        {hero.cta ? (
-          <div className="foundationHeroActions">
-            <ButtonLink href={localizeHref(hero.cta.href, locale)}>{hero.cta.label}</ButtonLink>
-          </div>
-        ) : null}
-      </section>
+          {hero.cta ? (
+            <div className="foundationHeroActions">
+              <ButtonLink href={localizeHref(hero.cta.href, locale)}>{hero.cta.label}</ButtonLink>
+            </div>
+          ) : null}
+        </section>
+      )}
+
+      {businessesOverview && hero.lead ? <section className="businessOpening gut"><p className="lead">{hero.lead}</p></section> : null}
+
+      {path === "/" ? (
+        <HomeCatalogue copy={homeCatalogueCopy[locale]} locale={locale} streams={homeProductStreams(locale)} />
+      ) : null}
 
       {showComponents ? <ComponentPreview locale={locale} /> : null}
+
+      {path === "/about" ? <AboutPageBody locale={locale} /> : null}
+      {path === "/products-services" ? <ProductsPageBody locale={locale} /> : null}
+      {path === "/businesses" ? <BusinessesPageBody locale={locale} /> : null}
+      {business ? <BusinessDetailBody business={business} locale={locale} /> : null}
 
       {hasClosingCard ? (
         <ClosingCard locale={locale} variant={path === "/businesses" ? "businesses" : "standard"} />

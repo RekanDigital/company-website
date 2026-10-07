@@ -1,0 +1,109 @@
+.businessesHero {
+  position: relative;
+  height: 100svh;
+  min-height: 620px;
+  overflow: hidden;
+  border-top: var(--rule);
+  touch-action: pan-y;
+  background: var(--ground);
+}
+
+.businessesHero.world {
+  cursor: grab;
+}
+
+.businessesHero.drag {
+  cursor: grabbing;
+}
+
+.businessesHero.hot {
+  cursor: pointer;
+}
+
+.businessesHeroCanvas,
+.businessesHeroOverlay {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.businessesHeroCanvas {
+  z-index: 0;
+}
+
+.businessesHeroOverlay {
+  z-index: 1;
+  pointer-events: none;
+}
+
+.businessesHeroTitle {
+  position: absolute;
+  z-index: 2;
+  top: clamp(64px, 9vh, 104px);
+  right: var(--gutter);
+  left: var(--gutter);
+  pointer-events: none;
+}
+
+.businessesHeroTitle h1 {
+  margin: 0;
+}
+
+@media (min-width: 901px) {
+  .businessesHeroTitle h1 {
+    font-size: min(9.2vw, 13.4svh);
+  }
+}
+
+.businessesHeroGhost {
+  display: inline-block;
+}
+
+.businessesHero.is-rendering .businessesHeroGhost {
+  color: transparent !important;
+  background: none !important;
+}
+
+.businessesHeroLabel {
+  position: absolute;
+  z-index: 3;
+  margin: 0;
+  padding: 5px 9px;
+  transform: translate(-50%, -100%);
+  background: var(--ground);
+  color: var(--blue-deep);
+  font: 500 15px/1.2 var(--font-geist-sans), sans-serif;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.35s;
+  pointer-events: none;
+}
+
+.businessesHeroLabel::after {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 1.5px;
+  height: 22px;
+  background: var(--ink);
+  content: "";
+}
+
+.businessesHeroLabel.is-visible {
+  opacity: 1;
+}
+
+@media (max-width: 760px) {
+  .businessesHeroLabel {
+    padding: 3px 6px;
+    font-size: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .businessesHeroLabel {
+    transition: none;
+  }
+}
