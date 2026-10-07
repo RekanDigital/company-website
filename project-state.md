@@ -4,9 +4,9 @@
 |---|---|
 | Last updated | 2026-10-07 |
 | Current phase | Phase 3 — Home experience completion (repo handoff) |
-| Phase 2 | Engineering complete in this repository; verified 2026-10-07. Drive tracker sync is pending. |
-| Current sprint | Sprint 3 (owner-locked Home completion and visual QA handoff) |
-| PM status | Phase 3 implementation handoff active; the Drive Project Tracker remains authoritative for formal PM status. |
+| Phase 2 | Complete & verified in repo ([`0c2ce90`](https://github.com/RekanDigital/company-website/commit/0c2ce90e9f8419e2d5667c9f46a14d3943e23f84)). Drive tracker synchronized. |
+| Current sprint | Sprint 3 (Home Three.js point-world scene flight & Partners refinement) |
+| PM status | Sprint 2 accepted; Sprint 3 active. Master Drive Project Tracker synchronized (69.2% complete). |
 | Engineering focus | Implement the approved Home point-world flight and continue Clients & Partners refinement within current owner direction. Preserve locked Home, shared-shell, responsive, and cross-page typography decisions. |
 | Active blockers | No technical blockers. Clients & Partners asset and visual refinements remain open owner decisions. |
 
@@ -24,19 +24,24 @@
 
 ---
 
-## 2. Phase 2 completion and Phase 3 handoff
+## 2. Phase 2 Completion & Sprint 3 Handoff
 
-**Phase 2 engineering delivery is complete in the repository.** The static-page templates, Home catalogue/partner marquee, and Businesses live point renderer are present and covered by the checks listed in Recent Verified Changes. The following statuses describe observed engineering delivery; they do not imply formal PM acceptance or update the Drive tracker.
+**Phase 2 engineering delivery is accepted and verified.** Static-page templates, Home catalogue/partner marquee, and Businesses live point renderer are committed and covered by the 99 passing Playwright tests. Master Drive Project Tracker is synchronized (overall completion: 69.2%).
 
-The full cross-phase backlog and formal lifecycle tracking remain authoritative in the [Drive Project Tracker](https://drive.google.com/file/d/1NjRTjkLEQkQjgCYh6O5lkYzaJ2cUcnvp/view?usp=drivesdk). The tracker has not been synchronized by this repository update.
+### Completed Sprint 2 Tasks
 
 | PhaseID | TaskID | TaskDescription | Owner | Status | Priority | StartDate | DueDate | CommitLink | DocLink | Sprint |
 |---|---|---|---|---|---|---|---|---|---|---|
-| P2 | T2.3 | Static Page Assembly (About, Products & Services catalogue, Businesses list, Business detail template) | Codex | Engineering complete — verified | High | 2026-10-07 | 2026-10-10 | — | [`plans/page-maps/`](file:///home/sigisgood/rekanmu/company-website/plans/page-maps/) | Sprint 2 |
-| P3 | T3.1 | Home Sliding Products & Services Section & Partners Marquee | Codex | Engineering complete — verified; delivered during Sprint 2 | Medium | 2026-10-10 | 2026-10-12 | — | [`design-docs/prototypes/`](file:///home/sigisgood/rekanmu/company-website/design-docs/prototypes/) | Sprint 2 |
-| P3 | T3.2 | Businesses Hero Live Point Renderer (Plain WebGL, binary point asset) | Codex | Engineering complete — verified; delivered during Sprint 2 | High | 2026-10-12 | 2026-10-15 | — | [`design-docs/prototypes/businesses-hero.source.js`](file:///home/sigisgood/rekanmu/company-website/design-docs/prototypes/businesses-hero.source.js) | Sprint 2 |
+| P2 | T2.3 | Static Page Assembly (About, Products & Services catalogue, Businesses list, Business detail template) | Codex | Done | High | 2026-10-07 | 2026-10-07 | [`0c2ce90`](https://github.com/RekanDigital/company-website/commit/0c2ce90e9f8419e2d5667c9f46a14d3943e23f84) | [`plans/page-maps/`](file:///home/sigisgood/rekanmu/company-website/plans/page-maps/) | Sprint 2 |
+| P3 | T3.1 | Home Sliding Products & Services Section & Partners Marquee | Codex | Done (Delivered in Sprint 2) | Medium | 2026-10-07 | 2026-10-07 | [`0c2ce90`](https://github.com/RekanDigital/company-website/commit/0c2ce90e9f8419e2d5667c9f46a14d3943e23f84) | [`design-docs/prototypes/`](file:///home/sigisgood/rekanmu/company-website/design-docs/prototypes/) | Sprint 2 |
+| P3 | T3.2 | Businesses Hero Live Point Renderer (Plain WebGL, binary point asset) | Codex | Done (Delivered in Sprint 2) | High | 2026-10-07 | 2026-10-07 | [`0c2ce90`](https://github.com/RekanDigital/company-website/commit/0c2ce90e9f8419e2d5667c9f46a14d3943e23f84) | [`design-docs/prototypes/businesses-hero.source.js`](file:///home/sigisgood/rekanmu/company-website/design-docs/prototypes/businesses-hero.source.js) | Sprint 2 |
 
-T3.1 and T3.2 have PhaseID P3, but their engineering implementation landed during Sprint 2. Their completion does not close Phase 3; the Home point-world flight and owner-directed Partners refinement remain open below.
+### Active Sprint 3 Tasks
+
+| PhaseID | TaskID | TaskDescription | Owner | Status | Priority | StartDate | DueDate | CommitLink | DocLink | Sprint |
+|---|---|---|---|---|---|---|---|---|---|---|
+| P3 | T3.3 | Home Scene Three.js Point-World Integration (Timeline, camera, stops, frame, through-the-square) | Codex | Ready / Active | High | 2026-10-07 | 2026-10-10 | — | [`design-docs/prototypes/home-scene/`](file:///home/sigisgood/rekanmu/company-website/design-docs/prototypes/home-scene/) | Sprint 3 |
+| P4 | T4.1 | Bilingual Content Ingestion (EN/ID toggle, metadata, strict copy fidelity) | Codex | Ready | High | 2026-10-07 | 2026-10-12 | — | [`plans/page-maps/PAGE-MAP.md`](file:///home/sigisgood/rekanmu/company-website/plans/page-maps/PAGE-MAP.md) | Sprint 3 |
 
 ### Phase 3 no-drift guardrails
 
@@ -57,7 +62,7 @@ Phase 3 must implement the approved experience without reopening locked design d
 
 - **2026-10-07:** Sprint 1 engineering foundation verified and accepted ([`d4eb7f9`](https://github.com/RekanDigital/company-website/commit/d4eb7f9)). Next.js 16 App Router, Tailwind v4, Geist fonts, tokens, responsive shell, and UI component suite fully verified across 24 SSG pages and 34 passing Playwright test suites (0 failures).
 - **2026-10-07:** Master Drive project tracker synchronized; Sprint 1 tasks (T1.1, T1.2, T2.1, T2.2) marked Done (overall project completion 46.2%). Sprint 2 active.
-- **2026-10-07:** Repository Phase 2 engineering delivery marked complete after static-page, Home catalogue/hero, and Businesses hero Playwright verification. Phase 3 handoff is active; the Home point-world flight remains unmounted and Clients & Partners remains in owner-directed refinement. Drive tracker synchronization remains outstanding.
+- **2026-10-07:** Sprint 2 engineering delivery verified and committed ([`0c2ce90`](https://github.com/RekanDigital/company-website/commit/0c2ce90e9f8419e2d5667c9f46a14d3943e23f84)). T2.3 (Static pages), T3.1 (Home catalogue & partners marquee), T3.2 (Businesses hero WebGL renderer) verified across 99 passing Playwright tests (0 failures). Phase 2 complete. Master Drive project tracker synchronized (69.2% overall progress). Sprint 3 active.
 - **2026-10-06:** Baseline design handoff received, integration locked, operational PM baseline established, cloud repository initialized at `RekanDigital/company-website`.
 
 ---
