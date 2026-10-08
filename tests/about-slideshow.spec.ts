@@ -30,6 +30,7 @@ for (const locale of ["en", "id"] as const) {
       ];
     })).toEqual(["0px", "0px", "0px", "0px"]);
     await expect(slideshow.locator(".aboutSlideshowSlide img")).toHaveCount(4);
+    await expect(slideshow.locator(".aboutSlideshowSlide img").first()).toHaveAttribute("src", /about-slide-1_v2\.png/);
     await expect(slideshow.locator(".aboutSlideshowSlide img").first()).toHaveAttribute(
       "alt",
       locale === "en"
@@ -48,6 +49,12 @@ for (const locale of ["en", "id"] as const) {
       expect(layout).toHaveLength(4);
       expect(layout.every((slide) => slide.visibility === "visible" && slide.position === "static" && slide.opacity === "1")).toBe(true);
       expect(layout.slice(1).every((slide, index) => slide.top >= layout[index].bottom - 1)).toBe(true);
+      expect(await slideshow.locator(".aboutSlideshowSlide img").evaluateAll((images) =>
+        images.every((image) => {
+          const rect = image.getBoundingClientRect();
+          return Math.abs(rect.left) < 1 && Math.abs(rect.width - window.innerWidth) < 1;
+        }),
+      )).toBe(true);
       return;
     }
 
@@ -57,6 +64,7 @@ for (const locale of ["en", "id"] as const) {
       CSS.supports("animation-range", "contain 0% contain 100%"),
     );
     test.skip(!supportsScrollTimeline, "This browser uses the static scrolling fallback");
+    await expect(slideshow.locator(".aboutSlideshowSlide img").first()).toHaveCSS("object-fit", "cover");
 
     await scrollSlideshowTo(page, 0);
     await expect(slideshow.locator(".aboutSlideshowSlide--1")).toHaveCSS("visibility", "visible");

@@ -39,10 +39,10 @@ These four owner-approved PNGs replace the old world band in the live About page
 
 | File | Source size | What it shows | Used on |
 |---|---:|---|---|
-| `about-slide-1.png` | 3.4 MB | The RekanMU team around a conference table | About slideshow |
-| `about-slide-2.png` | 4.0 MB | RekanMU team outdoors | About slideshow |
-| `about-slide-3.png` | 4.2 MB | Team beside information about Indonesian seaweed | About slideshow |
-| `about-slide-4.png` | 3.9 MB | A large RekanMU team gathering indoors | About slideshow |
+| `resources/assets/about-rekanmu-slideshow/about-slide-1_v2.png` → `public/assets/about-rekanmu-slideshow/about-slide-1_v2.png` | 5.7 MB | The RekanMU team around a conference table | About slideshow |
+| `resources/assets/about-rekanmu-slideshow/about-slide-2_v2.png` → `public/assets/about-rekanmu-slideshow/about-slide-2_v2.png` | 6.1 MB | RekanMU team outdoors | About slideshow |
+| `resources/assets/about-rekanmu-slideshow/about-slide-3_v2.png` → `public/assets/about-rekanmu-slideshow/about-slide-3_v2.png` | 6.4 MB | Team beside information about Indonesian seaweed | About slideshow |
+| `resources/assets/about-rekanmu-slideshow/about-slide-4_v2.png` → `public/assets/about-rekanmu-slideshow/about-slide-4_v2.png` | 6.3 MB | A large RekanMU team gathering indoors | About slideshow |
 
 The render files above are JPEG stills used in mockups and as fallbacks where noted. For the build:
 

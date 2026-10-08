@@ -205,7 +205,7 @@ Mockup: `pages/about.html`.
 | # | Section | What it is |
 |---|---|---|
 | 1 | Hero | "About / RekanMU" (second line in points) and a lead paragraph in the right half. |
-| 2 | Photo slideshow | Four approved team photographs span the page width. Desktop cross-fades them with scroll when supported and motion is allowed; tablet/mobile, reduced-motion and unsupported-browser layouts stack them vertically. |
+| 2 | Photo slideshow | Four approved v2 team photographs fill the section edge-to-edge. Desktop cross-fades them with scroll, covering the pinned viewport without a frame when supported and motion is allowed; tablet/mobile, reduced-motion and unsupported-browser layouts stack all four at full width and natural aspect ratio. |
 | 3 | Story | Three short paragraphs stepping down across three columns, then one statement in large text. |
 | 4 | At a glance | One lead paragraph, then three large figures, each with a small heading and a paragraph. The middle figure is in points. |
 | 5 | Vision and mission | The vision as a large statement. The mission as a ruled list of five. |
