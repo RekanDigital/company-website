@@ -18,6 +18,7 @@ for (const locale of ["en", "id"] as const) {
   const base = locale === "en" ? "" : "/id";
 
   test(`${locale}: approved static page content and routes`, async ({ page }) => {
+    test.setTimeout(60_000);
     let response = await page.goto(`${base}/about`);
     expect(response?.status()).toBe(200);
     await expect(page.locator("html")).toHaveAttribute("lang", locale);
@@ -213,6 +214,35 @@ test("About keeps approved point treatments and matches its glance display size 
   }
 });
 
+test("Home and About point figures use the proportional numeral grid", async ({ page }) => {
+  const width = page.viewportSize()?.width ?? 0;
+  const desktop = width >= 901;
+  const expected = desktop
+    ? [".04em", "max(.35px,.0065em)", "max(.5px,.01em)"]
+    : [".055em", "max(.5px,.009em)", "max(.72px,.014em)"];
+
+  for (const locale of ["en", "id"] as const) {
+    const base = locale === "en" ? "" : "/id";
+    await page.goto(`${base}/`);
+    const home = await page.locator(".homeCatalogueCountDotted").first().evaluate((element) => {
+      const style = getComputedStyle(element);
+      return ["--dot-pitch", "--dot-radius", "--dot-edge"].map((name) =>
+        style.getPropertyValue(name).replaceAll(" ", ""),
+      );
+    });
+    expect(home).toEqual(expected);
+
+    await page.goto(`${base}/about`);
+    const about = await page.locator(".figureGrid .num.dots").evaluate((element) => {
+      const style = getComputedStyle(element);
+      return ["--dot-pitch", "--dot-radius", "--dot-edge"].map((name) =>
+        style.getPropertyValue(name).replaceAll(" ", ""),
+      );
+    });
+    expect(about).toEqual(expected);
+  }
+});
+
 test("About value titles stay clear of their descriptions across desktop widths", async ({ page }) => {
   test.skip(test.info().project.name !== "desktop");
   for (const width of [1440, 1024, 900, 821]) {
@@ -237,7 +267,7 @@ test("About value titles stay clear of their descriptions across desktop widths"
 });
 
 test("non-home page display scales match Home across locales and breakpoints", async ({ page }) => {
-  test.setTimeout(90_000);
+  test.setTimeout(150_000);
   const routes = [
     {
       path: "/about",

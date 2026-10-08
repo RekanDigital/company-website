@@ -301,7 +301,13 @@
   from { opacity: 0; transform: translateY(8px); }
 }
 
-.shell-button--light { border-color: var(--ground); background: var(--ground); color: var(--ink); }
+.shell-button--light {
+  --button-sweep: var(--white);
+  --button-active-foreground: var(--night);
+  border-color: var(--white);
+  background: transparent;
+  color: var(--white);
+}
 
 .closing-card {
   position: relative;

@@ -143,6 +143,12 @@
   .homeCatalogue {
     --home-catalogue-title-size: calc(min(9.2vw, 13.4svh) * 0.83);
   }
+
+  .homeCatalogueCountDotted {
+    --dot-pitch: 0.04em;
+    --dot-radius: max(0.35px, 0.0065em);
+    --dot-edge: max(0.5px, 0.01em);
+  }
 }
 
 .homeCataloguePanel:focus-visible {

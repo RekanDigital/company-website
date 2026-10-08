@@ -6,10 +6,11 @@ import specimens from "@/assets/specimens.jpg";
 import type { Locale } from "@/content/site";
 import type { BusinessPointSlug } from "@/content/businesses-point-data";
 import { BusinessesCardViewer } from "./businesses-card-viewer";
+import { OriginButton, type OriginButtonProps } from "./ui/origin-button";
 
 import "./ui.css";
 
-type LinkProps = {
+type LinkProps = Omit<OriginButtonProps, "children" | "className" | "href" | "small"> & {
   children: ReactNode;
   className?: string;
   href: string;
@@ -20,14 +21,17 @@ export function ButtonLink({
   className = "",
   href,
   small = false,
+  ...props
 }: LinkProps & { small?: boolean }) {
   return (
-    <Link
-      className={`cta${small ? " sm" : ""}${className ? ` ${className}` : ""}`}
+    <OriginButton
+      {...props}
+      className={className}
       href={href}
+      small={small}
     >
       {children}
-    </Link>
+    </OriginButton>
   );
 }
 

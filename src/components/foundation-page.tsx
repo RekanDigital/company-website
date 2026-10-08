@@ -6,6 +6,7 @@ import { homeCatalogueCopy } from "@/content/home";
 import { ClosingCard } from "./closing-card";
 import { BusinessesHero } from "./businesses-hero";
 import { HomeCatalogue } from "./home-catalogue";
+import { HomeScene } from "./home-scene";
 import {
   AboutPageBody,
   BusinessDetailBody,
@@ -169,10 +170,12 @@ export function FoundationPage({
 
   return (
     <>
-      {businessesOverview ? (
+      {path === "/" ? (
+        <HomeScene locale={locale} />
+      ) : businessesOverview ? (
         <BusinessesHero title={hero.title} sites={businessPages.map(({ slug, name }) => ({ slug, name }))} />
       ) : (
-        <section className={`foundationHero gut${path === "/" ? " homeHero" : ""}${business ? " businessDetailHero" : ""}`}>
+        <section className={`foundationHero gut${business ? " businessDetailHero" : ""}`}>
           {business ? <BusinessHeroArt business={business} locale={locale} /> : null}
           <h1 className="disp">
             {hero.title.solid}

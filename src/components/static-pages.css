@@ -177,6 +177,14 @@
   min-height: 0.74em;
 }
 
+@media (min-width: 901px) {
+  .staticPage .figureGrid .num.dots {
+    --dot-pitch: 0.04em;
+    --dot-radius: max(0.35px, 0.0065em);
+    --dot-edge: max(0.5px, 0.01em);
+  }
+}
+
 .figureGrid .focusFigure .h3 {
   font-size: var(--fs-display-2);
   line-height: var(--lh-display-2);
@@ -257,24 +265,39 @@
 .streamBar {
   display: flex;
   flex-wrap: wrap;
-  gap: 0 24px;
-  padding-block: 12px;
-  border-block: var(--rule);
+  justify-content: center;
+  gap: 10px 12px;
+  padding-block: 16px;
 }
 
-.streamTag {
-  display: inline-flex;
+.streamBarRow {
+  display: contents;
+}
+
+.cta.sm.streamTag {
   min-height: 44px;
-  align-items: center;
-  color: var(--mute);
+  padding-inline: 14px;
+  border-width: 1px;
   font-size: 11px;
-  text-decoration: none;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
-.streamTag:focus-visible,
-.streamTag:hover {
-  color: var(--blue-deep);
+.streamTag:focus-visible {
+  outline-offset: 4px;
+}
+
+@media (min-width: 1101px) {
+  .streamBar {
+    display: grid;
+    gap: 10px;
+  }
+
+  .streamBarRow {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
 }
 
 .catalogueSection {
@@ -632,6 +655,7 @@
   .streamBar {
     flex-wrap: nowrap;
     overflow-x: auto;
+    justify-content: flex-start;
   }
 
   .streamTag {

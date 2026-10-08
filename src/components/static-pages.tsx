@@ -17,6 +17,7 @@ import { localizeHref, type Locale } from "@/content/site";
 import { AboutSlideshow } from "./about-slideshow";
 import { BusinessesCardViewer } from "./businesses-card-viewer";
 import { BusinessPlate, ButtonLink, Figure, PointType, Statement, TextLink } from "./ui";
+import { OriginButton } from "./ui/origin-button";
 import "./static-pages.css";
 
 function withoutRepeatedHeading(section: ContentSection, heading: string) {
@@ -120,10 +121,18 @@ export function ProductsPageBody({ locale }: { locale: Locale }) {
   const sections = productsContent[locale].filter((section) => section.nodes.length);
   const inquiry = sections.find((section) => section.name === "Business Inquiry")!;
   const streams = sections.filter((section) => section !== inquiry);
+  const streamRows = [streams.slice(0, 3), streams.slice(3)];
   return (
     <div className="staticPage">
       <nav aria-label={locale === "en" ? "Product and service streams" : "Alur produk dan layanan"} className="streamBar gut">
-        {streams.map((section, index) => <a className="streamTag mono" href={`#${productStreamIds[index]}`} key={section.name}>[ {section.name} ]</a>)}
+        {streamRows.map((row, rowIndex) => (
+          <div className="streamBarRow" key={rowIndex}>
+            {row.map((section, index) => {
+              const streamIndex = rowIndex * 3 + index;
+              return <OriginButton className="streamTag mono" href={`#${productStreamIds[streamIndex]}`} key={section.name} small>{section.name}</OriginButton>;
+            })}
+          </div>
+        ))}
       </nav>
       {streams.map((section, sectionIndex) => {
         const content = contentItems(section.nodes);

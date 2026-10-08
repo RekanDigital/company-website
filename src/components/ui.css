@@ -1,6 +1,6 @@
 .cta {
-  /* Owner-approved button-only contrast adjustment; brand blue is unchanged. */
-  --button-sweep: #3077C7;
+  --button-sweep: var(--ink);
+  --button-active-foreground: var(--white);
   position: relative;
   z-index: 0;
   display: inline-flex;
@@ -11,7 +11,7 @@
   isolation: isolate;
   border: 1.5px solid currentColor;
   border-radius: 999px;
-  color: inherit;
+  color: var(--ink);
   font-size: 18px;
   font-weight: 500;
   line-height: 1;
@@ -19,25 +19,23 @@
   transition: color 0.3s 0.12s, border-color 0.3s;
 }
 
-.cta::before {
+.originButton__fill {
   position: absolute;
   z-index: -1;
-  inset: -2px;
+  translate: -50% -50%;
+  border-radius: 50%;
   background: var(--button-sweep);
-  clip-path: inset(0 100% 0 0);
-  content: "";
-  transition: clip-path 0.6s var(--ease-standard);
+  pointer-events: none;
 }
 
-.cta:hover,
-.cta:focus-visible {
+.originButton__label {
+  position: relative;
+  z-index: 1;
+}
+
+.cta[data-origin-active="true"] {
   border-color: var(--button-sweep);
-  color: var(--white);
-}
-
-.cta:hover::before,
-.cta:focus-visible::before {
-  clip-path: inset(0 0 0 0);
+  color: var(--button-active-foreground);
 }
 
 .cta:focus-visible,
@@ -367,7 +365,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .cta,
-  .cta::before,
+  .originButton__fill,
   .lk,
   .roll span,
   .ruledList .row {
