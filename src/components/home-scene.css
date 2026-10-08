@@ -9,7 +9,6 @@
   inset: 0;
   overflow: hidden;
   background: var(--ground);
-  transition: background-color 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
 .homeScene__loading canvas {
@@ -43,7 +42,7 @@ main:has(.homeScene[data-home-loading-state="loading"], .homeScene[data-home-loa
   visibility: hidden;
 }
 
-.homeScene[data-home-loading-state="merge"] .homeScene__loadingSquare img {
+.homeScene:is([data-home-loading-state="merge"], [data-home-loading-state="ready"]) .homeScene__loadingSquare img {
   opacity: 1;
 }
 
@@ -539,4 +538,40 @@ main:has(.homeScene[data-home-loading-state="loading"], .homeScene[data-home-loa
   .homeScene__stop a {
     transition-duration: 0.01ms;
   }
+}
+
+@keyframes home-loading-header {
+  from { opacity: 0; translate: 0 -10px; }
+  to { opacity: 1; translate: none; }
+}
+@keyframes home-loading-headline {
+  from { opacity: 0; translate: 0 100px; }
+  to { opacity: 1; translate: none; }
+}
+@keyframes home-loading-button {
+  from { opacity: 0; translate: 0 100px; }
+  to { opacity: 1; translate: none; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  body:has(.homeScene:is([data-home-loading-state="ready"], [data-home-loading-state="done"])) .site-header--home {
+    animation: home-loading-header 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  .homeScene:is([data-home-loading-state="ready"], [data-home-loading-state="done"]) .homeScene__loadingHeadline {
+    display: inline-block;
+    max-width: 100%;
+    vertical-align: top;
+    animation: home-loading-headline 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .homeScene:is([data-home-loading-state="ready"], [data-home-loading-state="done"]) .homeScene__loadingHeadline--point {
+    animation-delay: 180ms;
+  }
+  .homeScene:is([data-home-loading-state="ready"], [data-home-loading-state="done"]) .homeScene__heroButton {
+    animation: home-loading-button 1.2s cubic-bezier(0.16, 1, 0.3, 1) 360ms both;
+  }
+}
+
+/* A live loader must not be frozen inside a route-transition snapshot. */
+:root:has(.homeScene:is([data-home-loading-state="loading"], [data-home-loading-state="merge"], [data-home-loading-state="ready"]))::view-transition-new(page-content) {
+  animation: none;
 }

@@ -75,16 +75,29 @@ export function HomeScene({ locale }: { locale: Locale }) {
       return;
     }
 
+    let disposed = false;
     let loading = sceneRoot.__homeLoading ?? null;
-    const loadingFactory = (window as HomeLoadingWindow).createHomeLoading;
-    if (!loading && loadingFactory && loadingCanvas && loadingSquare && loadingLogo?.complete && loadingLogo.naturalWidth) {
-      try {
-        loading = loadingFactory({ root, canvas: loadingCanvas, square: loadingSquare, logo: loadingLogo });
-        sceneRoot.__homeLoading = loading;
-      } catch {
-        root.dataset.homeLoadingState = "done";
+    const loadingReady = (async () => {
+      if (!loading && loadingLogo) {
+        try { await loadingLogo.decode(); } catch { /* Use the readable hero if the logo fails. */ }
       }
-    }
+      if (disposed || root.dataset.homeFlightMode === "static") {
+        sceneRoot.__homeLoading?.destroy();
+        delete sceneRoot.__homeLoading;
+        return null;
+      }
+      loading = sceneRoot.__homeLoading ?? null;
+      const factory = (window as HomeLoadingWindow).createHomeLoading;
+      if (!loading && factory && loadingCanvas && loadingSquare && loadingLogo?.naturalWidth) {
+        try {
+          loading = factory({ root, canvas: loadingCanvas, square: loadingSquare, logo: loadingLogo });
+          sceneRoot.__homeLoading = loading;
+        } catch {
+          root.dataset.homeLoadingState = "done";
+        }
+      }
+      return loading;
+    })();
 
     const webglContext = canvas.getContext("webgl2", { alpha: true, antialias: false, powerPreference: "high-performance" });
     if (!webglContext) {
@@ -97,15 +110,18 @@ export function HomeScene({ locale }: { locale: Locale }) {
         delete sceneRoot.__homeLoading;
         loading = null;
       };
-      if (loading) loading.finish(restoreStatic);
-      else restoreStatic();
+      void loadingReady.then((instance) => {
+        if (disposed) return;
+        if (instance) instance.finish(restoreStatic);
+        else restoreStatic();
+      });
       return () => {
+        disposed = true;
         loading?.destroy();
         delete sceneRoot.__homeLoading;
       };
     }
 
-    let disposed = false;
     let frameId = 0;
     let worker: Worker | null = null;
     let observer: IntersectionObserver | null = null;
@@ -130,11 +146,8 @@ export function HomeScene({ locale }: { locale: Locale }) {
     let contrastTextPositions: { node: HTMLElement; x: number; y: number }[] = [];
     let start = performance.now();
     let handoffAt = 0;
-    const squareGeometry = () => ({
-      cx: portrait ? W * 0.5 : W * 0.68,
-      cy: portrait ? H * 0.64 : H * 0.63,
-      side: portrait ? Math.min(W * 0.56, H * 0.34) : Math.min(H * 0.4, W * 0.3),
-    });
+    let openingSquare = { cx: 0, cy: 0, side: 0 };
+    const squareGeometry = () => openingSquare;
     const lowMemory = Math.min(window.innerWidth, window.innerHeight) < 700 ||
       ("deviceMemory" in navigator && Number((navigator as Navigator & { deviceMemory?: number }).deviceMemory) <= 4);
     const options = {
@@ -219,6 +232,12 @@ export function HomeScene({ locale }: { locale: Locale }) {
       renderer.setSize(W, H, false);
       world.camera.aspect = W / H;
       portrait = W / H < 0.8 || W <= 900;
+      const squareStyle = loadingSquare && getComputedStyle(loadingSquare);
+      openingSquare = {
+        cx: squareStyle ? Number.parseFloat(squareStyle.left) : W * (portrait ? 0.5 : 0.68),
+        cy: squareStyle ? Number.parseFloat(squareStyle.top) : H * (portrait ? 0.64 : 0.63),
+        side: squareStyle ? Number.parseFloat(squareStyle.width) : Math.min(H * (portrait ? 0.34 : 0.4), W * (portrait ? 0.56 : 0.3)),
+      };
       world.camera.updateProjectionMatrix();
       const heroChapter = chapters[0];
       if (heroChapter && heroButton) {
@@ -237,8 +256,8 @@ export function HomeScene({ locale }: { locale: Locale }) {
       frameId = 0;
       if (disposed || !renderer || !world || !visible || document.hidden) return;
       const time = (now - start) / 1000;
-      const handoff = handoffAt ? smooth(0, 0.6, (now - handoffAt) / 1000) : 0;
-      Ps += (P - Ps) * 0.085;
+      const handoff = handoffAt ? smooth(0, 1.2, (now - handoffAt) / 1000) : 0;
+      Ps += ((handoff < 1 ? 0 : P) - Ps) * 0.085;
       if (Math.abs(P - Ps) < 0.00005) Ps = P;
       pointerX += (targetX - pointerX) * 0.06;
       pointerY += (targetY - pointerY) * 0.06;
@@ -272,7 +291,7 @@ export function HomeScene({ locale }: { locale: Locale }) {
       frame.style.height = `${(bottom - top).toFixed(1)}px`;
       worldBg.style.opacity = String(handoff);
       canvas.style.opacity = String(handoff);
-      frame.style.opacity = exit > 0 ? String(smooth(0.05, 0.3, exit)) : String(handoff * (1 - smooth(0.6, 1, enter)));
+      frame.style.opacity = exit > 0 ? String(smooth(0.05, 0.3, exit)) : String(handoff * smooth(0, 0.1, enter) * (1 - smooth(0.6, 1, enter)));
       const fade = Math.max(handoff, smooth(0.0005, 0.012, Ps));
       logo.style.transform = `translate3d(${left.toFixed(1)}px,${top.toFixed(1)}px,0)`;
       logo.style.width = `${(right - left).toFixed(1)}px`;
@@ -348,7 +367,7 @@ export function HomeScene({ locale }: { locale: Locale }) {
     const enterFlight = () => {
       if (!sceneReady || disposed || fallbackStarted || flightStarted || !renderer || !world) return;
       flightStarted = true;
-      handoffAt = performance.now();
+      handoffAt = loading ? 0 : performance.now();
       worldBg.style.opacity = "0";
       canvas.style.opacity = "0";
       frame.style.opacity = "0";
@@ -358,14 +377,14 @@ export function HomeScene({ locale }: { locale: Locale }) {
       resize();
       root.dataset.homeFlightReady = "true";
       updateScroll();
-      Ps = P;
-      if (visible && !document.hidden) frameId = requestAnimationFrame(renderFrame);
+      Ps = 0;
+      if (frameId) cancelAnimationFrame(frameId);
+      renderFrame(performance.now());
     };
     const onLoaderReady = () => enterFlight();
 
     // Reserve the locked scroll track immediately; worker readiness never changes its height.
     root.dataset.homeFlightMode = "loading";
-    if (!loading) root.dataset.homeLoadingState = "done";
     if (header) header.dataset.homeFlightHeader = "true";
     sequence.style.height = "2000svh";
     canvas.addEventListener("webglcontextlost", onContextLost);
@@ -434,7 +453,7 @@ export function HomeScene({ locale }: { locale: Locale }) {
           return;
         }
         world = makeWorld(THREE, { ...options, pointData });
-        await document.fonts?.ready;
+        await Promise.all([document.fonts?.ready, loadingReady]);
         if (disposed) return;
         start = performance.now();
         root.dataset.homeMainInitMs = String(performance.now() - pointDataReceivedAt);
@@ -442,6 +461,7 @@ export function HomeScene({ locale }: { locale: Locale }) {
         loading?.setProgress(0.96);
         if (loading) {
           loading.finish(() => {
+            handoffAt = performance.now();
             loading = null;
             delete sceneRoot.__homeLoading;
           });
@@ -511,9 +531,9 @@ export function HomeScene({ locale }: { locale: Locale }) {
           <div className="homeScene__chapters">
             <section className="homeScene__chapter homeScene__hero foundationHero homeHero" data-home-flight-chapter>
               <h1 className="disp">
-                {hero.title.solid}
+                <span className="homeScene__loadingHeadline homeScene__loadingHeadline--solid">{hero.title.solid}</span>
                 <br />
-                <PointType>{hero.title.point}</PointType>
+                <span className="homeScene__loadingHeadline homeScene__loadingHeadline--point"><PointType>{hero.title.point}</PointType></span>
               </h1>
             </section>
           </div>

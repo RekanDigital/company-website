@@ -23,6 +23,12 @@ Contact cards rise through 35svh and overlap by `clamp(96px, 18svh, 180px)`, wit
 
 Native scroll timelines make these effects reversible with scrolling. Reduced motion and browsers without scroll-timeline support retain readable static vertical flow. Focus opens the catalogue copy, raises the selected compact card, and stops contact-card translation. Owner visual acceptance does not imply a newly executed full regression suite.
 
+### Locked Home loading — 8 October 2026
+
+The owner accepted and locked the repaired loading screen on the 4100 canvas. Preserve the proportional left-to-right point fill over 5.5 seconds and the wait for scene readiness before merging. This supersedes the loading reference's no-artificial-wait rule, including on warm visits; reduced motion skips the loader.
+
+The loader logo and opening world window share the loader square's computed CSS geometry. Keep that rectangle fixed throughout the logo handoff, suppress its opening border, and begin the 1.2-second logo-to-world fade only after the point loader has ended. Scroll expansion starts after that fade completes. Home headline phrases and the CTA use the page-switch easing, 1.2-second fade and 100 px upward settle, staggered by 180 ms.
+
 ## Lock status
 
 | Area | Status | Sprint 3 rule |
