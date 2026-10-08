@@ -41,7 +41,7 @@
   mix-blend-mode: normal;
 }
 
-@media (prefers-reduced-motion: no-preference) {
+@media (min-width: 821px) and (prefers-reduced-motion: no-preference) {
   @supports (view-timeline-name: --about-slideshow) and (animation-timeline: --about-slideshow) and (animation-range: contain 0% contain 100%) {
     .aboutSlideshow {
       height: 320svh;
@@ -87,11 +87,9 @@
       object-position: center top;
     }
 
-    @media (min-width: 821px) {
-      .aboutSlideshowPin {
-        top: 64px;
-        height: calc(100svh - 64px);
-      }
+    .aboutSlideshowPin {
+      top: 64px;
+      height: calc(100svh - 64px);
     }
   }
 }

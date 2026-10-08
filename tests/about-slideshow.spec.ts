@@ -11,7 +11,7 @@ async function scrollSlideshowTo(page: import("@playwright/test").Page, progress
 }
 
 for (const locale of ["en", "id"] as const) {
-  test(`About slideshow advances with page scroll in ${locale}`, async ({ page }) => {
+  test(`About slideshow uses the responsive presentation in ${locale}`, async ({ page }) => {
     const route = locale === "en" ? "/about" : "/id/about";
     const regionName = locale === "en" ? "RekanMU moments" : "Momen RekanMU";
 
@@ -36,6 +36,20 @@ for (const locale of ["en", "id"] as const) {
         ? "The RekanMU team gathered around a conference table."
         : "Tim RekanMU berkumpul mengelilingi meja rapat.",
     );
+
+    if (await page.evaluate(() => window.innerWidth <= 820)) {
+      const layout = await slideshow.locator(".aboutSlideshowSlide").evaluateAll((slides) =>
+        slides.map((slide) => {
+          const style = getComputedStyle(slide);
+          const rect = slide.getBoundingClientRect();
+          return { visibility: style.visibility, position: style.position, opacity: style.opacity, top: rect.top, bottom: rect.bottom };
+        }),
+      );
+      expect(layout).toHaveLength(4);
+      expect(layout.every((slide) => slide.visibility === "visible" && slide.position === "static" && slide.opacity === "1")).toBe(true);
+      expect(layout.slice(1).every((slide, index) => slide.top >= layout[index].bottom - 1)).toBe(true);
+      return;
+    }
 
     const supportsScrollTimeline = await page.evaluate(() =>
       CSS.supports("view-timeline-name", "--about-slideshow") &&
