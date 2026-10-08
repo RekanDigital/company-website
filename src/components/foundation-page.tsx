@@ -173,7 +173,7 @@ export function FoundationPage({
         <BusinessesHero title={hero.title} sites={businessPages.map(({ slug, name }) => ({ slug, name }))} />
       ) : (
         <section className={`foundationHero gut${path === "/" ? " homeHero" : ""}${business ? " businessDetailHero" : ""}`}>
-          {business ? <BusinessHeroArt business={business} /> : null}
+          {business ? <BusinessHeroArt business={business} locale={locale} /> : null}
           <h1 className="disp">
             {hero.title.solid}
             <br />

@@ -13,19 +13,18 @@ const businesses = [
 for (const locale of ["en", "id"] as const) {
   const base = locale === "en" ? "" : "/id";
 
-  test(`${locale}: business detail hierarchy, dotted headings, and art masks`, async ({ page }, testInfo) => {
+  test(`${locale}: business detail hierarchy, dotted headings, and viewer masks`, async ({ page }, testInfo) => {
     for (const slug of businesses) {
       await page.goto(`${base}/businesses/${slug}`);
       await expect(page.locator(".overviewSection .statement")).toBeVisible();
       await expect(page.locator(".detailSectionHeading h2 .dots")).toBeVisible();
       await expect(page.locator(".detailInquiry h2 .dots")).toHaveCount(slug === "food-beverage" ? 0 : 1);
       await expect(page.locator(".nextBusiness .dots")).toBeVisible();
-      await expect(page.locator(".businessHeroArt")).toHaveCSS("mask-image", /radial-gradient/);
-      await expect(page.locator(".businessSectionArt")).toHaveCSS("mask-image", /radial-gradient/);
+      await expect(page.locator(".businessDetailHeroVisual")).toHaveCSS("mask-image", /radial-gradient/);
+      await expect(page.locator(".businessSectionArt")).toHaveCount(0);
       await expect(page.locator(".nextSpecimen")).toHaveCSS("mask-image", /radial-gradient/);
-      await expect(page.locator(".businessHeroArt")).toHaveCSS("mix-blend-mode", "normal");
-      await expect(page.locator(".businessSectionArt")).toHaveCSS("mix-blend-mode", "normal");
-      await expect(page.locator(".nextSpecimen img")).toHaveCSS("mix-blend-mode", "normal");
+      await expect(page.locator(".businessDetailHeroViewer")).toHaveCSS("mix-blend-mode", "normal");
+      await expect(page.locator(".nextSpecimen .businessCardViewerFallback")).toHaveCSS("mix-blend-mode", "multiply");
 
       const sectionHeading = page.locator(".detailSectionHeading h2").first();
       await expect(sectionHeading).toContainText(locale === "en" ? "Capabilities" : "Kapabilitas");

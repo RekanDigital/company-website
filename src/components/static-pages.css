@@ -318,14 +318,6 @@
   line-height: 1.04;
 }
 
-.businessSectionArt {
-  display: block;
-  width: min(100%, 400px);
-  height: auto;
-  -webkit-mask-image: radial-gradient(ellipse 84% 78% at center, #000 64%, transparent 100%);
-  mask-image: radial-gradient(ellipse 84% 78% at center, #000 64%, transparent 100%);
-}
-
 .detailSection > :not(.detailSectionHeading) {
   grid-column: 2;
 }
@@ -391,7 +383,7 @@
   mask-image: radial-gradient(ellipse 84% 78% at center, #000 64%, transparent 100%);
 }
 
-.nextSpecimen img {
+.nextSpecimen .businessCardViewerFallback {
   position: absolute;
   top: 0;
   left: 0;
@@ -399,6 +391,7 @@
   max-width: none;
   height: 100%;
   transform: translateX(calc(var(--specimen-index) * -14.285714%));
+  mix-blend-mode: multiply;
 }
 
 @media (min-width: 821px) {
@@ -440,20 +433,33 @@
   overflow: hidden;
 }
 
-.businessDetailHero > :not(.businessHeroArt) {
+.businessDetailHero > :not(.businessDetailHeroViewer) {
   position: relative;
   z-index: 1;
 }
 
-.businessHeroArt {
-  position: absolute;
-  z-index: 0;
-  top: 0;
-  right: 0;
+.businessDetailHeroViewer {
+  inset: 0 0 auto auto;
   width: min(52%, 760px);
   height: auto;
+  aspect-ratio: 900 / 1100;
+}
+
+.businessDetailHeroVisual {
+  overflow: hidden;
   -webkit-mask-image: radial-gradient(ellipse 84% 78% at center, #000 64%, transparent 100%);
   mask-image: radial-gradient(ellipse 84% 78% at center, #000 64%, transparent 100%);
+}
+
+.businessDetailHeroViewer .businessCardViewerFallback {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 700%;
+  max-width: none;
+  height: auto;
+  transform: translate(calc(var(--specimen-index) * -14.285714%), -50%);
+  mix-blend-mode: multiply;
 }
 
 .businessDetailHero h1 {
@@ -530,14 +536,16 @@
 
   .businessDetailHero {
     min-height: auto;
-    padding-top: 52vw;
+    padding-top: 24px;
   }
 
   .businessDetailHero h1 {
-    padding-top: 80px;
+    padding-top: 24px;
   }
 
-  .businessHeroArt {
-    width: 76%;
+  .businessDetailHeroViewer {
+    position: relative;
+    inset: auto;
+    width: min(76%, 360px);
   }
 }

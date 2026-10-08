@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { CSSProperties } from "react";
 
 import {
   aboutContent,
@@ -15,6 +14,7 @@ import {
 } from "@/content/static-pages";
 import { localizeHref, type Locale } from "@/content/site";
 
+import { BusinessesCardViewer } from "./businesses-card-viewer";
 import { BusinessPlate, ButtonLink, Figure, PointType, Statement, TextLink } from "./ui";
 import "./static-pages.css";
 
@@ -189,7 +189,7 @@ export function BusinessesPageBody({ locale }: { locale: Locale }) {
             <div className={`businessGrid ${businessItems.length === 2 ? "twoBusinessGrid" : "fiveBusinessGrid"}`}>
               {businessItems.map((item) => {
                 const business = businessPages.find((candidate) => candidate.name === item.title)!;
-                return <BusinessPlate ctaLabel={locale === "en" ? "View business" : "Lihat bisnis"} description={item.paragraphs.join(" ")} href={localizeHref(`/businesses/${business.slug}`, locale)} imageAlt="" key={item.title} name={item.title} specimenIndex={business.specimenIndex} />;
+                return <BusinessPlate businessSlug={business.slug} ctaLabel={locale === "en" ? "View business" : "Lihat bisnis"} description={item.paragraphs.join(" ")} href={localizeHref(`/businesses/${business.slug}`, locale)} imageAlt="" key={item.title} locale={locale} name={item.title} specimenIndex={business.specimenIndex} />;
               })}
             </div>
           </section>
@@ -230,7 +230,6 @@ export function BusinessDetailBody({ business, locale }: { business: BusinessPag
           <section className={`sec gut detailSection${sectionIndex ? " detailContinuation" : ""}`} key={section.name}>
             {sectionIndex === 0 ? <div className="detailSectionHeading">
               <h2 className="disp2">{capabilityParts[0]}<PointType>{capabilityParts[1]}</PointType></h2>
-              <Image alt="" className="businessSectionArt" height={1100} src={`/assets/renders/${business.render}`} width={900} />
             </div> : null}
             {content.intro.length ? content.items.length ? <div className="staticCopy">{content.intro.map((text) => <p className="lead" key={text}>{text}</p>)}</div> : content.intro.map((text) => <div className="detailStatement" key={text}><Statement>{text}</Statement></div>) : null}
             {content.items.length ? <div className="detailGrid">{content.items.map((item) => <article key={item.title}><h3 className="h3">{item.title}</h3>{item.paragraphs.map((text) => <p className="body" key={text}>{text}</p>)}</article>)}</div> : null}
@@ -242,7 +241,10 @@ export function BusinessDetailBody({ business, locale }: { business: BusinessPag
         <div><h2 className="disp2">{inquiryParts[0]}<br /><PointType>{inquiryParts[1]}</PointType></h2></div>
         <div>{(inquiryContent?.items[0]?.paragraphs ?? inquiryContent?.intro ?? []).map((text) => <p className="lead" key={text}>{text}</p>)}<BusinessDetailActions locale={locale} /></div>
       </section> : null}
-      <Link aria-label={`${locale === "en" ? "Next:" : "Berikutnya:"} ${next.name}`} className="nextBusiness gut" href={localizeHref(`/businesses/${next.slug}`, locale)}><span className="disp2">{locale === "en" ? "Next:" : "Berikutnya:"} {nextNameParts[0]}<br /><PointType>{nextNameParts[1]}</PointType></span><span className="nextSpecimen" style={{ "--specimen-index": next.specimenIndex } as CSSProperties}><Image alt="" height={640} src="/assets/renders/specimens.jpg" width={4480} /></span></Link>
+      <Link aria-label={`${locale === "en" ? "Next:" : "Berikutnya:"} ${next.name}`} className="nextBusiness gut" href={localizeHref(`/businesses/${next.slug}`, locale)}>
+        <span className="disp2">{locale === "en" ? "Next:" : "Berikutnya:"} {nextNameParts[0]}<br /><PointType>{nextNameParts[1]}</PointType></span>
+        <div className="nextSpecimen"><BusinessesCardViewer locale={locale} name={next.name} slug={next.slug} specimenIndex={next.specimenIndex} /></div>
+      </Link>
     </div>
   );
 }
@@ -256,6 +258,6 @@ function BusinessDetailActions({ locale }: { locale: Locale }) {
   return <div className="detailActions"><ButtonLink href={localizeHref("/businesses#contact", locale)}>{locale === "en" ? "Start a Business Inquiry" : "Mulai Diskusi Bisnis"}</ButtonLink><TextLink href={localizeHref("/products-services", locale)}>{locale === "en" ? "Explore Products & Services" : "Jelajahi Produk & Layanan"}</TextLink></div>;
 }
 
-export function BusinessHeroArt({ business }: { business: BusinessPage }) {
-  return <Image alt="" className="businessHeroArt" height={1100} priority sizes="(max-width: 820px) 76vw, 52vw" src={`/assets/renders/${business.render}`} width={900} />;
+export function BusinessHeroArt({ business, locale }: { business: BusinessPage; locale: Locale }) {
+  return <BusinessesCardViewer hero locale={locale} name={business.name} rotating slug={business.slug} specimenIndex={business.specimenIndex} />;
 }

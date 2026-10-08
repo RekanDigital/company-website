@@ -3,6 +3,9 @@ import Link from "next/link";
 import type { CSSProperties, ReactNode } from "react";
 
 import specimens from "@/assets/specimens.jpg";
+import type { Locale } from "@/content/site";
+import type { BusinessPointSlug } from "@/content/businesses-point-data";
+import { BusinessesCardViewer } from "./businesses-card-viewer";
 
 import "./ui.css";
 
@@ -112,6 +115,8 @@ export function BusinessPlate({
   description,
   href,
   imageAlt,
+  businessSlug,
+  locale = "en",
   name,
   specimenIndex,
 }: {
@@ -119,6 +124,8 @@ export function BusinessPlate({
   description: string;
   href: string;
   imageAlt: string;
+  businessSlug?: BusinessPointSlug;
+  locale?: Locale;
   name: string;
   specimenIndex: SpecimenIndex;
 }) {
@@ -127,12 +134,11 @@ export function BusinessPlate({
   return (
     <article className="plate">
       <div className="businessPlateImage">
-        <Image
-          alt={imageAlt}
-          sizes="(max-width: 820px) 100vw, 33vw"
-          src={specimens}
-          style={imageStyle}
-        />
+        {businessSlug ? (
+          <BusinessesCardViewer locale={locale} name={name} slug={businessSlug} specimenIndex={specimenIndex} />
+        ) : (
+          <Image alt={imageAlt} src={specimens} style={imageStyle} unoptimized />
+        )}
       </div>
       <h3 className="h3">{name}</h3>
       <p className="body">{description}</p>

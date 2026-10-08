@@ -8,4 +8,6 @@ export const businessPointSlices = [
   { slug: "food-beverage", byteOffset: 765896, pointCount: 12303, x: 378, z: 242 },
 ] as const;
 
+export type BusinessPointSlug = (typeof businessPointSlices)[number]["slug"];
+
 export const businessPointCount = businessPointSlices.reduce((sum, item) => sum + item.pointCount, 0);

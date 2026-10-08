@@ -60,13 +60,13 @@ export const productsContent = parsePageMap("PRODUCTS-SERVICES.md");
 export const businessesContent = parsePageMap("BUSINESSES.md");
 
 export const businessPages = [
-  { slug: "technology-digitalization", name: "Technology & Digitalization", specimenIndex: 1, file: "TECHNOLOGY-DIGITALIZATION.md", render: "specimen-tech.jpg" },
-  { slug: "data-business-intelligence", name: "Data & Business Intelligence", specimenIndex: 2, file: "DATA-BUSINESS-INTELLIGENCE.md", render: "specimen-data.jpg" },
-  { slug: "general-trading-supply-chain", name: "General Trading & Supply Chain", specimenIndex: 0, file: "GENERAL-TRADING-SUPPLY-CHAIN.md", render: "specimen-trading.jpg" },
-  { slug: "fisheries-seaweed-blue-economy", name: "Fisheries, Seaweed & Blue Economy", specimenIndex: 3, file: "FISHERIES-SEAWEED-BLUE-ECONOMY.md", render: "specimen-fisheries.jpg" },
-  { slug: "health-bioscience", name: "Health & Bioscience", specimenIndex: 4, file: "HEALTH-BIOSCIENCE.md", render: "specimen-health.jpg" },
-  { slug: "agriculture-green-economy", name: "Agriculture & Green Economy", specimenIndex: 5, file: "AGRICULTURE-GREEN-ECONOMY.md", render: "specimen-agriculture.jpg" },
-  { slug: "food-beverage", name: "Food & Beverage", specimenIndex: 6, file: "FOOD-BEVERAGE.md", render: "specimen-food-beverage.jpg" },
+  { slug: "technology-digitalization", name: "Technology & Digitalization", specimenIndex: 1, file: "TECHNOLOGY-DIGITALIZATION.md" },
+  { slug: "data-business-intelligence", name: "Data & Business Intelligence", specimenIndex: 2, file: "DATA-BUSINESS-INTELLIGENCE.md" },
+  { slug: "general-trading-supply-chain", name: "General Trading & Supply Chain", specimenIndex: 0, file: "GENERAL-TRADING-SUPPLY-CHAIN.md" },
+  { slug: "fisheries-seaweed-blue-economy", name: "Fisheries, Seaweed & Blue Economy", specimenIndex: 3, file: "FISHERIES-SEAWEED-BLUE-ECONOMY.md" },
+  { slug: "health-bioscience", name: "Health & Bioscience", specimenIndex: 4, file: "HEALTH-BIOSCIENCE.md" },
+  { slug: "agriculture-green-economy", name: "Agriculture & Green Economy", specimenIndex: 5, file: "AGRICULTURE-GREEN-ECONOMY.md" },
+  { slug: "food-beverage", name: "Food & Beverage", specimenIndex: 6, file: "FOOD-BEVERAGE.md" },
 ] as const;
 
 export type BusinessPage = (typeof businessPages)[number];

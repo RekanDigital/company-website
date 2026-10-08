@@ -4,7 +4,19 @@ type Site = { slug: string; name: string };
 type HeroState = "words" | "world" | "focus";
 type StateChange = (state: HeroState, slug: string | null) => void;
 
-type SitePoint = (typeof businessPointSlices)[number] & { name: string; centerX: number; centerZ: number; height: number; extent: number };
+type SitePoint = (typeof businessPointSlices)[number] & {
+  name: string;
+  centerX: number;
+  centerZ: number;
+  height: number;
+  extent: number;
+  minX: number;
+  maxX: number;
+  minY: number;
+  maxY: number;
+  minZ: number;
+  maxZ: number;
+};
 
 export type BusinessesHeroRenderer = {
   pointCount: number;
@@ -105,7 +117,6 @@ export async function mountBusinessesHero(
   const dataView = new DataView(buffer);
   const counts = sites.reduce((map, site) => map.set(site.slug, site.name), new Map<string, string>());
   const pointTotal = businessPointCount;
-  const bounds = { minX: GROUND.minX, maxX: GROUND.maxX, minY: 0, maxY: 0, minZ: GROUND.minZ, maxZ: GROUND.maxZ };
   const ground: number[] = [];
   for (let x = GROUND.minX; x <= GROUND.maxX; x += GROUND.step) {
     for (let z = GROUND.minZ; z <= GROUND.maxZ; z += GROUND.step) ground.push(x, z);
@@ -131,12 +142,6 @@ export async function mountBusinessesHero(
         positions[out * 3] = x + slice.x;
         positions[out * 3 + 1] = y;
         positions[out * 3 + 2] = z + slice.z;
-        bounds.minX = Math.min(bounds.minX, x + slice.x);
-        bounds.maxX = Math.max(bounds.maxX, x + slice.x);
-        bounds.minY = Math.min(bounds.minY, y);
-        bounds.maxY = Math.max(bounds.maxY, y);
-        bounds.minZ = Math.min(bounds.minZ, z + slice.z);
-        bounds.maxZ = Math.max(bounds.maxZ, z + slice.z);
         meta[out * 4] = flag;
         meta[out * 4 + 1] = siteIndex;
         meta[out * 4 + 2] = Math.random();
@@ -154,8 +159,15 @@ export async function mountBusinessesHero(
       centerZ: slice.z + (min[2] + max[2]) / 2,
       height: max[1],
       extent: Math.max(max[0] - min[0], max[2] - min[2], (max[1] - min[1]) * 1.25),
+      minX: slice.x + min[0],
+      maxX: slice.x + max[0],
+      minY: min[1],
+      maxY: max[1],
+      minZ: slice.z + min[2],
+      maxZ: slice.z + max[2],
     });
   }
+  const maxSiteExtent = Math.max(...sitePoints.map(({ extent }) => extent));
   for (let index = 0; index < ground.length; index += 2, out++) {
     positions[out * 3] = ground[index];
     positions[out * 3 + 1] = 0;
@@ -406,33 +418,34 @@ export async function mountBusinessesHero(
       }
     }
 
+    let minWorldX = Infinity, maxWorldX = -Infinity, maxWorldY = -Infinity;
+    for (const site of sitePoints) {
+      for (let corner = 0; corner < 8; corner++) {
+        const x = corner & 1 ? site.maxX : site.minX;
+        const y = corner & 2 ? site.maxY : site.minY;
+        const z = corner & 4 ? site.maxZ : site.minZ;
+        const dx = x + 40, dz = z - 95;
+        minWorldX = Math.min(minWorldX, dx * cy - dz * sy);
+        maxWorldX = Math.max(maxWorldX, dx * cy - dz * sy);
+        const projectedY = y * cp - (dx * sy + dz * cy) * sp;
+        maxWorldY = Math.max(maxWorldY, projectedY);
+      }
+    }
+    const baseWorldScale = Math.min(width / 1640, height / 1125);
+    const worldScale = baseWorldScale * 2;
+    const worldScaleGain = worldScale / baseWorldScale;
     let cameraX: number, cameraZ: number, scale: number, originX: number, originY: number;
     if (focusIndex >= 0) {
       const site = sitePoints[focusIndex];
       cameraX = site.centerX; cameraZ = site.centerZ;
-      scale = (small ? Math.min(width * 0.8, height * 0.3) : Math.min(width * 0.44, height * 0.48)) / site.extent;
+      scale = (small ? Math.min(width * 0.8, height * 0.3) : Math.min(width * 0.44, height * 0.48)) * worldScaleGain / maxSiteExtent;
       originX = width * (small ? 0.5 : 0.56);
-      originY = height * (small ? 0.56 : 0.74);
+      originY = height * (small ? 0.56 : 0.7);
     } else {
       cameraX = -40; cameraZ = 95;
-      const projectedZ = [
-        (bounds.minX - cameraX) * sy + (bounds.minZ - cameraZ) * cy,
-        (bounds.minX - cameraX) * sy + (bounds.maxZ - cameraZ) * cy,
-        (bounds.maxX - cameraX) * sy + (bounds.minZ - cameraZ) * cy,
-        (bounds.maxX - cameraX) * sy + (bounds.maxZ - cameraZ) * cy,
-      ];
-      const top = bounds.maxY * cp - Math.min(...projectedZ) * sp;
-      const bottom = bounds.minY * cp - Math.max(...projectedZ) * sp;
-      const topEdge = titleBottom + 28;
-      const bottomEdge = height - 40;
-      const room = Math.max(1, bottomEdge - topEdge);
-      const extent = top - bottom;
-      scale = Math.min(width / 1640, height / 1125, room / extent);
-      originX = width * 0.5;
-      originY = Math.min(
-        Math.max(height * (small ? 0.56 : 0.70), topEdge + top * scale),
-        bottomEdge + bottom * scale,
-      );
+      scale = worldScale;
+      originX = width * 0.5 - (minWorldX + maxWorldX) * 0.5 * scale;
+      originY = titleBottom + 28 + maxWorldY * scale;
     }
     const ease = reduced ? 1 : 1 - Math.exp(-dt * 5.2);
     camera.x += (cameraX - camera.x) * ease;
