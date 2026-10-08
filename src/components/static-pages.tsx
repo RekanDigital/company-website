@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { CSSProperties } from "react";
 
 import {
   aboutContent,
@@ -47,6 +48,25 @@ function pointTail(text: string | undefined, marker: string) {
     : text;
 }
 
+function AboutWordStatement({ text, marker }: { text: string; marker: string }) {
+  const words = text.split(" ");
+  const offset = text.indexOf(marker);
+  const pointWord = offset < 0 ? words.length : text.slice(0, offset).trim().split(" ").length;
+
+  return (
+    <Statement>
+      {words.map((word, index) => (
+        <span key={index}>
+          <span
+            className={`aboutStatementWord${index >= pointWord ? " dots" : ""}`}
+            style={{ "--word-start": `${4 + index / words.length * 92}%`, "--word-end": `${4 + (index + 1) / words.length * 92}%` } as CSSProperties}
+          >{word}</span>{" "}
+        </span>
+      ))}
+    </Statement>
+  );
+}
+
 export function AboutPageBody({ locale }: { locale: Locale }) {
   const sections = aboutContent[locale].filter((section) => section.nodes.length);
   const byName = (name: string) => sections.find((section) => section.name === name)!;
@@ -60,30 +80,36 @@ export function AboutPageBody({ locale }: { locale: Locale }) {
   const corporate = contentItems(byName("Corporate Information").nodes);
   const visionItem = vision.items[0];
   const missionItem = vision.items[1];
+  const visionText = visionItem?.paragraphs[0] ?? "";
+
 
   return (
     <div className="staticPage aboutPage">
       <AboutSlideshow locale={locale} paragraphs={storyParagraphs.map((node) => node.text)} />
       <section className="sec gut staticSection staticStory">
-        {storyStatement ? <Statement>{pointTail(storyStatement, locale === "en" ? "RekanMU continues" : "RekanMU terus")}</Statement> : null}
+        {storyStatement ? <AboutWordStatement text={storyStatement} marker={locale === "en" ? "RekanMU continues" : "RekanMU terus"} /> : null}
       </section>
       <section className="sec gut staticSection atGlance">
         <div className="atGlanceIntro">{glance.intro.map((text) => <p className="lead" key={text}>{text}</p>)}</div>
         <div className="figureGrid">
           {glance.items.map((item, index) => (
-            <article className={index === 2 ? "focusFigure" : undefined} key={item.title}>
+            <article key={item.title}>
               <Figure
                 description={item.paragraphs.map((text) => <p key={text}>{text}</p>)}
                 point={index === 1}
                 title={item.title}
-                value={index < 2 ? String(index === 0 ? 7 : 5) : undefined}
+                value={["7", "5", "50+"][index]}
               />
             </article>
           ))}
         </div>
       </section>
       <section className="sec gut staticSection visionMission">
-        {visionItem ? <Statement>{pointTail(visionItem.paragraphs[0], locale === "en" ? "based on Indonesia’s resources" : "berbasis sumber daya Indonesia")}</Statement> : null}
+        {visionItem ? (
+          <div className="aboutVisionCurtain">
+            <AboutWordStatement text={visionText} marker={locale === "en" ? "based on Indonesia’s resources" : "berbasis sumber daya Indonesia"} />
+          </div>
+        ) : null}
         <div className="missionBlock">
           <h2 className="disp2">{missionItem?.title}</h2>
           <ul className="missionList body">{missionItem?.paragraphs.map((text) => <li key={text}>{text}</li>)}</ul>
@@ -91,7 +117,14 @@ export function AboutPageBody({ locale }: { locale: Locale }) {
       </section>
       <section className="sec gut staticSection valueSection">
         <div className="valueGrid">
-          {values.items.map((item, index) => <article className="valueItem" key={item.title}><h3 className="disp2">{index === 1 || index === 3 ? <PointType>{item.title}</PointType> : item.title}</h3><p className="body">{item.paragraphs[0]}</p></article>)}
+          {values.items.map((item, index) => (
+            <div className="aboutValueStage" key={item.title}>
+              <article className="valueItem">
+                <h3 className="disp2">{index === 1 || index === 3 ? <PointType>{item.title}</PointType> : item.title}</h3>
+                <p className="body">{item.paragraphs[0]}</p>
+              </article>
+            </div>
+          ))}
         </div>
       </section>
       <section className="sec gut staticSection corporateSection">

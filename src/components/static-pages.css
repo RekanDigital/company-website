@@ -120,11 +120,6 @@
       animation-timeline: --about-story-pair;
       animation-range: entry var(--word-start) entry var(--word-end);
     }
-    .aboutPage .staticStory .statement {
-      animation: about-story-statement linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 100%;
-    }
     @media (max-width: 820px), (max-aspect-ratio: 1/1) {
       .aboutStoryBackdrop {
         height: auto;
@@ -162,9 +157,9 @@
   from { opacity: 0; transform: translateX(-0.2em); }
   to { opacity: 1; transform: translateX(0); }
 }
-@keyframes about-story-statement {
-  from { transform: translateY(100px); clip-path: inset(100% 0 0); }
-  to { transform: translateY(0); clip-path: inset(0); }
+@keyframes about-statement-word {
+  from { opacity: 0; transform: translateX(-0.08em); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
 .staticStory,
@@ -215,6 +210,12 @@
   align-items: start;
 }
 
+@media (min-width: 821px) {
+  .aboutPage .figureGrid > article:nth-child(2) {
+    margin-top: clamp(56px, 7vw, 112px);
+  }
+}
+
 .figureGrid .num {
   min-height: 0.74em;
 }
@@ -227,11 +228,6 @@
   }
 }
 
-.figureGrid .focusFigure .h3 {
-  font-size: var(--fs-display-2);
-  line-height: var(--lh-display-2);
-  letter-spacing: var(--ls-display-2);
-}
 
 .visionMission > .statement {
   max-width: none;
@@ -576,7 +572,6 @@
     .missionBlock h2,
     .corporateSection h2,
     .valueItem h3,
-    .figureGrid .focusFigure .h3,
     .catalogueHeading h2,
     .inquirySection > h2,
     .businessGroupHeading h2,
@@ -722,4 +717,161 @@
     inset: auto;
     width: min(76%, 360px);
   }
+}
+
+.aboutVisionCurtain,
+.aboutValueStage { display: contents; }
+.aboutStatementWord { display: inline-block; }
+
+@media (min-width: 821px) and (max-width: 1100px) {
+  .aboutPage :is(.missionBlock, .corporateSection, .valueItem) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .aboutPage :is(.missionBlock h2, .corporateSection h2, .valueItem h3) {
+    font-size: clamp(36px, 5.5vw, 60px);
+  }
+  .aboutPage .figureGrid .num { font-size: 14vw; }
+}
+@media (min-width: 821px) and (max-aspect-ratio: 1/1) {
+  .aboutPage .figureGrid { grid-template-columns: minmax(0, 1fr); }
+  .aboutPage .figureGrid > article:nth-child(2) { margin-top: 0; }
+  .aboutPage .corporateGrid > div { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+}
+
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) and (animation-range: entry 0% entry 100%) {
+    .aboutPage .staticStory .statement { view-timeline-name: --about-statement; }
+    .aboutStatementWord {
+      animation: about-statement-word cubic-bezier(0.4, 0, 0.2, 1) both;
+      animation-range: entry var(--word-start) entry var(--word-end);
+    }
+    .staticStory .aboutStatementWord {
+      animation-timeline: --about-statement;
+      animation-range: cover calc(var(--word-start) / 2) cover calc(var(--word-end) / 2);
+    }
+
+    .aboutPage .figureGrid { view-timeline-name: --about-figures; }
+    .aboutPage .figureGrid > article {
+      animation: about-surface-rise linear both;
+      animation-timeline: --about-figures;
+      animation-range: entry 0% cover 30%;
+    }
+    .aboutPage .figureGrid > article:nth-child(2) { animation-range: entry 10% cover 38%; }
+    .aboutPage .figureGrid > article:nth-child(3) { animation-range: entry 20% cover 46%; }
+    .aboutPage .figureGrid .figure { view-timeline-name: --about-figure; }
+    .aboutPage .figureGrid :is(.h3, .body) {
+      animation: about-row-reveal linear both;
+      animation-timeline: --about-figure;
+      animation-range: entry 20% cover 40%;
+    }
+    .aboutPage .figureGrid .body { animation-range: entry 30% cover 46%; }
+
+    .aboutPage .aboutVisionCurtain {
+      display: grid;
+      align-items: start;
+      position: relative;
+      isolation: isolate;
+      min-height: 110svh;
+      padding-block: 8svh;
+      view-timeline-name: --about-vision;
+    }
+    .aboutVisionCurtain .statement {
+      position: sticky;
+      top: 104px;
+      align-self: start;
+      max-width: none;
+    }
+    .aboutVisionCurtain .aboutStatementWord { animation-timeline: --about-vision; }
+    .aboutPage .missionBlock h2 {
+      animation: about-row-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 100%;
+    }
+    .aboutPage .missionList li {
+      animation: about-row-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 28%;
+    }
+
+    .aboutPage .valueGrid { display: block; }
+    .aboutPage .aboutValueStage {
+      display: block;
+      position: relative;
+      min-height: 85svh;
+      view-timeline-name: --about-value;
+    }
+    .aboutValueStage + .aboutValueStage { margin-top: -20svh; }
+    .aboutPage .aboutValueStage .valueItem {
+      position: sticky;
+      top: 96px;
+      min-height: 50svh;
+      align-items: center;
+      padding-block: 6svh;
+      background: var(--ground);
+      border: 0;
+      animation: about-value-sheet linear both;
+      animation-timeline: --about-value;
+      animation-range: entry 0% cover 30%;
+    }
+    .aboutValueStage .valueItem h3 {
+      animation: about-row-reveal linear both;
+      animation-timeline: --about-value;
+      animation-range: entry 0% cover 28%;
+    }
+    .aboutValueStage .valueItem p {
+      animation: about-row-reveal linear both;
+      animation-timeline: --about-value;
+      animation-range: entry 20% cover 40%;
+    }
+
+    .aboutPage .corporateSection h2 {
+      animation: about-row-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 25%;
+    }
+    .aboutPage .corporateGrid > div { view-timeline-name: --about-legal-row; }
+    .aboutPage .corporateGrid :is(dt, dd) {
+      --about-reveal-distance: 24px;
+      animation: about-row-reveal linear both;
+      animation-timeline: --about-legal-row;
+      animation-range: entry 0% cover 25%;
+    }
+    .aboutPage .corporateGrid dd { animation-range: entry 12% cover 30%; }
+
+    @media (max-width: 1100px), (max-aspect-ratio: 1/1) {
+      .aboutPage .figureGrid > article {
+        animation-timeline: view();
+        animation-range: entry 0% cover 32%;
+      }
+      .aboutPage .aboutVisionCurtain { min-height: auto; padding-block: 5svh; }
+      .aboutVisionCurtain .statement { position: static; }
+      .aboutPage .aboutValueStage { min-height: clamp(300px, 55svh, 560px); }
+      .aboutValueStage + .aboutValueStage { margin-top: -8svh; }
+      .aboutPage .aboutValueStage .valueItem {
+        top: 80px;
+        min-height: clamp(260px, 42svh, 430px);
+        grid-template-columns: minmax(0, 1fr);
+        align-content: center;
+        gap: 28px;
+      }
+    }
+  }
+}
+
+@keyframes about-surface-rise {
+  from { transform: translateY(140px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes about-row-reveal {
+  from { transform: translateY(var(--about-reveal-distance, 64px)); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes about-detail-appear {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes about-value-sheet {
+  from { transform: translateY(22svh); }
+  to { transform: translateY(0); }
 }
