@@ -21,108 +21,150 @@
   mix-blend-mode: multiply;
 }
 
-.aboutSlideshow {
+/* The photograph and story share one bounded scroll scene. */
+.staticPage.aboutPage > .aboutStoryScene {
+  position: relative;
+  border: 0;
   background: var(--ground);
 }
 
-.staticPage.aboutPage > .aboutSlideshow {
-  border: 0;
-}
-
-.aboutSlideshowSlide {
-  visibility: visible;
-  opacity: 1;
-}
-
-.aboutSlideshowSlide img {
+.aboutStoryBackdrop img {
   display: block;
   width: 100%;
   height: auto;
-  mix-blend-mode: normal;
 }
 
-@media (min-width: 821px) and (prefers-reduced-motion: no-preference) {
-  @supports (view-timeline-name: --about-slideshow) and (animation-timeline: --about-slideshow) and (animation-range: contain 0% contain 100%) {
-    .aboutSlideshow {
-      height: 320svh;
-      view-timeline-name: --about-slideshow;
-      view-timeline-axis: block;
-    }
+.aboutStoryPairs {
+  position: relative;
+  display: grid;
+  gap: clamp(72px, 12svh, 140px);
+  padding-block: clamp(72px, 12svh, 140px);
+}
 
-    .aboutSlideshowPin {
+.aboutStoryPair {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: clamp(40px, 8vw, 140px);
+  align-items: center;
+}
+
+.aboutStoryPair:nth-child(2) {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+}
+
+.aboutStoryPair:nth-child(2) .aboutStoryPhoto { grid-column: 2; grid-row: 1; }
+.aboutStoryPair:nth-child(2) .aboutStoryCopy { grid-column: 1; grid-row: 1; }
+
+.aboutStoryPhoto { border-radius: 12px; overflow: clip; }
+
+.aboutStoryPhoto img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.aboutStoryCopy {
+  color: var(--ink);
+  max-width: 38em;
+}
+.aboutStoryCopy p {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(18px, 1.65vw, 24px);
+  line-height: 1.5;
+}
+.aboutStoryWord { display: inline-block; vertical-align: top; }
+.aboutStoryWord > span { display: inline-block; }
+
+@media (max-width: 820px), (max-aspect-ratio: 1/1) {
+  .aboutStoryPair,
+  .aboutStoryPair:nth-child(2) { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .aboutStoryPair:nth-child(2) .aboutStoryPhoto,
+  .aboutStoryPair:nth-child(2) .aboutStoryCopy { grid-column: auto; grid-row: auto; }
+  .aboutStoryPhoto { width: 92%; }
+  .aboutStoryPair:nth-child(2) .aboutStoryPhoto { justify-self: end; }
+  .aboutStoryCopy { padding: 0; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) and (animation-range: entry 0% entry 100%) {
+    .aboutStoryScene { view-timeline-name: --about-story; }
+    .aboutStoryBackdrop {
       position: sticky;
-      top: 0;
-      height: 100svh;
-      overflow: hidden;
-    }
-
-    .aboutSlideshowViewport {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-    }
-
-    .aboutSlideshowSlide {
-      position: absolute;
-      inset: 0;
-      visibility: hidden;
-      opacity: 0;
-      animation-duration: 1s;
-      animation-timing-function: linear;
-      animation-fill-mode: both;
-      animation-timeline: --about-slideshow;
-      animation-range: contain 0% contain 100%;
-    }
-
-    .aboutSlideshowSlide--1 { animation-name: about-slide-1; }
-    .aboutSlideshowSlide--2 { animation-name: about-slide-2; }
-    .aboutSlideshowSlide--3 { animation-name: about-slide-3; }
-    .aboutSlideshowSlide--4 { animation-name: about-slide-4; }
-
-    .aboutSlideshowSlide img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center top;
-    }
-
-    .aboutSlideshowPin {
       top: 64px;
       height: calc(100svh - 64px);
+      margin-bottom: calc(64px - 100svh);
+      overflow: hidden;
+      animation: about-story-background linear both;
+      animation-timeline: --about-story;
+      animation-range: contain 0% contain 25%;
+    }
+    .aboutStoryBackdrop img {
+      height: 100%; object-fit: cover; object-position: center;
+      animation: about-story-camera linear both;
+      animation-timeline: --about-story;
+      animation-range: contain 0% contain 65%;
+    }
+    .aboutStoryPairs { padding-top: 90svh; padding-bottom: 4svh; gap: 3svh; }
+    .aboutStoryPair { min-height: 170svh; align-items: start; view-timeline-name: --about-story-pair; }
+    .aboutStoryPhoto,
+    .aboutStoryCopy {
+      position: sticky;
+      top: 50svh;
+      animation: about-story-pair-exit linear both;
+      animation-timeline: --about-story-pair;
+      animation-range: contain 0% contain 100%;
+    }
+    .aboutStoryWord > span {
+      animation: about-story-word ease-in-out both;
+      animation-timeline: --about-story-pair;
+      animation-range: entry var(--word-start) entry var(--word-end);
+    }
+    .aboutPage .staticStory .statement {
+      animation: about-story-statement linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 100%;
+    }
+    @media (max-width: 820px), (max-aspect-ratio: 1/1) {
+      .aboutStoryBackdrop {
+        height: auto;
+        aspect-ratio: 2732 / 1536;
+        margin-bottom: calc(-100vw * 1536 / 2732);
+      }
+      .aboutStoryPairs { padding-top: 65svh; gap: 7svh; }
+      .aboutStoryPair { min-height: 155svh; grid-template-rows: auto 1fr; gap: 32px; }
+      .aboutStoryPhoto { top: 14svh; animation-name: about-story-pair-exit-compact; }
+      .aboutStoryCopy { top: 50svh; padding: 0; animation-name: about-story-pair-exit-compact; }
+      .aboutStoryWord > span { animation-range: entry var(--word-start) entry var(--word-end); }
     }
   }
 }
 
-@keyframes about-slide-1 {
-  0%, 23% { visibility: visible; opacity: 1; }
-  27% { visibility: visible; opacity: 0; }
-  27.01%, 100% { visibility: hidden; opacity: 0; }
+@keyframes about-story-background {
+  0%, 5% { opacity: 1; }
+  12% { opacity: 0.18; }
+  40% { opacity: 0.04; }
+  80%, 100% { opacity: 0; }
 }
-
-@keyframes about-slide-2 {
-  0%, 22.99% { visibility: hidden; opacity: 0; }
-  23% { visibility: visible; opacity: 0; }
-  27% { visibility: visible; opacity: 1; }
-  48% { visibility: visible; opacity: 1; }
-  52% { visibility: visible; opacity: 0; }
-  52.01%, 100% { visibility: hidden; opacity: 0; }
+@keyframes about-story-camera {
+  from { transform: scale(1.04) translateY(0); }
+  to { transform: scale(1.1) translateY(-6svh); }
 }
-
-@keyframes about-slide-3 {
-  0%, 47.99% { visibility: hidden; opacity: 0; }
-  48% { visibility: visible; opacity: 0; }
-  52% { visibility: visible; opacity: 1; }
-  73% { visibility: visible; opacity: 1; }
-  77% { visibility: visible; opacity: 0; }
-  77.01%, 100% { visibility: hidden; opacity: 0; }
+@keyframes about-story-pair-exit {
+  0%, 30% { transform: translateY(-50%); }
+  100% { transform: translateY(calc(-50% - 75svh)); }
 }
-
-@keyframes about-slide-4 {
-  0%, 72.99% { visibility: hidden; opacity: 0; }
-  73% { visibility: visible; opacity: 0; }
-  77% { visibility: visible; opacity: 1; }
-  100% { visibility: visible; opacity: 1; }
+@keyframes about-story-pair-exit-compact {
+  0%, 30% { transform: translateY(0); }
+  100% { transform: translateY(-55svh); }
+}
+@keyframes about-story-word {
+  from { opacity: 0; transform: translateX(-0.2em); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes about-story-statement {
+  from { transform: translateY(100px); clip-path: inset(100% 0 0); }
+  to { transform: translateY(0); clip-path: inset(0); }
 }
 
 .staticStory,

@@ -63,11 +63,8 @@ export function AboutPageBody({ locale }: { locale: Locale }) {
 
   return (
     <div className="staticPage aboutPage">
-      <AboutSlideshow locale={locale} />
+      <AboutSlideshow locale={locale} paragraphs={storyParagraphs.map((node) => node.text)} />
       <section className="sec gut staticSection staticStory">
-        <div className="storyColumns">
-          {storyParagraphs.map((node) => <p className="body" key={node.text}>{node.text}</p>)}
-        </div>
         {storyStatement ? <Statement>{pointTail(storyStatement, locale === "en" ? "RekanMU continues" : "RekanMU terus")}</Statement> : null}
       </section>
       <section className="sec gut staticSection atGlance">

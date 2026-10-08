@@ -1,4 +1,5 @@
 import Image from "next/image";
+import type { CSSProperties } from "react";
 
 import type { Locale } from "@/content/site";
 
@@ -33,34 +34,30 @@ const slides = [
   },
 ] as const;
 
-export function AboutSlideshow({ locale }: { locale: Locale }) {
+export function AboutSlideshow({ locale, paragraphs }: { locale: Locale; paragraphs: string[] }) {
   return (
-    <section
-      aria-label={locale === "en" ? "RekanMU moments" : "Momen RekanMU"}
-      className="worldBand aboutSlideshow"
-      role="region"
-    >
-      <div className="aboutSlideshowPin">
-        <div className="aboutSlideshowViewport">
-          {slides.map((slide, index) => (
-            <div
-              aria-label={`${index + 1} ${locale === "en" ? "of" : "dari"} ${slides.length}`}
-              aria-roledescription="slide"
-              className={`aboutSlideshowSlide aboutSlideshowSlide--${index + 1}`}
-              key={slide.src}
-              role="group"
-            >
-              <Image
-                alt={slide.alt[locale]}
-                height={1536}
-                loading={index === 0 ? "eager" : "lazy"}
-                sizes="100vw"
-                src={slide.src}
-                width={2732}
-              />
-            </div>
-          ))}
-        </div>
+    <section className="aboutStoryScene" aria-label={locale === "en" ? "RekanMU moments and story" : "Momen dan kisah RekanMU"}>
+      <div className="aboutStoryBackdrop">
+        <Image alt={slides[0].alt[locale]} src={slides[0].src} width={2732} height={1536} sizes="100vw" loading="eager" />
+      </div>
+      <div className="aboutStoryPairs gut">
+        {slides.slice(1).map((slide, index) => {
+          const words = paragraphs[index].split(" ");
+          return (
+            <article className="aboutStoryPair" key={slide.src}>
+              <div className="aboutStoryPhoto">
+                <Image alt={slide.alt[locale]} src={slide.src} width={2732} height={1536} sizes="(max-width: 820px) 90vw, 48vw" />
+              </div>
+              <div className="aboutStoryCopy">
+                <p className="body">
+                  {words.map((word, wordIndex) => (
+                    <span key={wordIndex}><span className="aboutStoryWord" style={{ "--word-start": `${8 + wordIndex / words.length * 40}%`, "--word-end": `${8 + (wordIndex + 1) / words.length * 40}%` } as CSSProperties}><span>{word}</span></span>{" "}</span>
+                  ))}
+                </p>
+              </div>
+            </article>
+          );
+        })}
       </div>
     </section>
   );
