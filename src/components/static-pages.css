@@ -2,6 +2,10 @@
   border-top: var(--rule-quiet);
 }
 
+.staticPage.aboutPage {
+  border-top: 0;
+}
+
 .staticPage > section {
   border-bottom: var(--rule-quiet);
 }
@@ -15,6 +19,112 @@
   width: 100%;
   height: auto;
   mix-blend-mode: multiply;
+}
+
+.aboutSlideshow {
+  background: var(--ground);
+}
+
+.staticPage.aboutPage > .aboutSlideshow {
+  border: 0;
+}
+
+.aboutSlideshowSlide {
+  visibility: visible;
+  opacity: 1;
+}
+
+.aboutSlideshowSlide img {
+  display: block;
+  width: 100%;
+  height: auto;
+  mix-blend-mode: normal;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (view-timeline-name: --about-slideshow) and (animation-timeline: --about-slideshow) and (animation-range: contain 0% contain 100%) {
+    .aboutSlideshow {
+      height: 320svh;
+      view-timeline-name: --about-slideshow;
+      view-timeline-axis: block;
+    }
+
+    .aboutSlideshowPin {
+      position: sticky;
+      top: 0;
+      height: 100svh;
+      overflow: hidden;
+    }
+
+    .aboutSlideshowViewport {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .aboutSlideshowSlide {
+      position: absolute;
+      inset: 0;
+      visibility: hidden;
+      opacity: 0;
+      animation-duration: 1s;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: --about-slideshow;
+      animation-range: contain 0% contain 100%;
+    }
+
+    .aboutSlideshowSlide--1 { animation-name: about-slide-1; }
+    .aboutSlideshowSlide--2 { animation-name: about-slide-2; }
+    .aboutSlideshowSlide--3 { animation-name: about-slide-3; }
+    .aboutSlideshowSlide--4 { animation-name: about-slide-4; }
+
+    .aboutSlideshowSlide img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center top;
+    }
+
+    @media (min-width: 821px) {
+      .aboutSlideshowPin {
+        top: 64px;
+        height: calc(100svh - 64px);
+      }
+    }
+  }
+}
+
+@keyframes about-slide-1 {
+  0%, 23% { visibility: visible; opacity: 1; }
+  27% { visibility: visible; opacity: 0; }
+  27.01%, 100% { visibility: hidden; opacity: 0; }
+}
+
+@keyframes about-slide-2 {
+  0%, 22.99% { visibility: hidden; opacity: 0; }
+  23% { visibility: visible; opacity: 0; }
+  27% { visibility: visible; opacity: 1; }
+  48% { visibility: visible; opacity: 1; }
+  52% { visibility: visible; opacity: 0; }
+  52.01%, 100% { visibility: hidden; opacity: 0; }
+}
+
+@keyframes about-slide-3 {
+  0%, 47.99% { visibility: hidden; opacity: 0; }
+  48% { visibility: visible; opacity: 0; }
+  52% { visibility: visible; opacity: 1; }
+  73% { visibility: visible; opacity: 1; }
+  77% { visibility: visible; opacity: 0; }
+  77.01%, 100% { visibility: hidden; opacity: 0; }
+}
+
+@keyframes about-slide-4 {
+  0%, 72.99% { visibility: hidden; opacity: 0; }
+  73% { visibility: visible; opacity: 0; }
+  77% { visibility: visible; opacity: 1; }
+  100% { visibility: visible; opacity: 1; }
 }
 
 .staticStory,

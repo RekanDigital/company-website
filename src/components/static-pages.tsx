@@ -14,6 +14,7 @@ import {
 } from "@/content/static-pages";
 import { localizeHref, type Locale } from "@/content/site";
 
+import { AboutSlideshow } from "./about-slideshow";
 import { BusinessesCardViewer } from "./businesses-card-viewer";
 import { BusinessPlate, ButtonLink, Figure, PointType, Statement, TextLink } from "./ui";
 import "./static-pages.css";
@@ -60,10 +61,8 @@ export function AboutPageBody({ locale }: { locale: Locale }) {
   const missionItem = vision.items[1];
 
   return (
-    <div className="staticPage">
-      <div className="worldBand">
-        <Image alt="" height={512} loading="eager" sizes="100vw" src="/assets/renders/world-built.jpg" width={1200} />
-      </div>
+    <div className="staticPage aboutPage">
+      <AboutSlideshow locale={locale} />
       <section className="sec gut staticSection staticStory">
         <div className="storyColumns">
           {storyParagraphs.map((node) => <p className="body" key={node.text}>{node.text}</p>)}
