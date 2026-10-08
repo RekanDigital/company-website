@@ -23,9 +23,13 @@ Architecture and technical constraints are locked in [`TECH-STACK.md`](file:///h
 - **Typography:** Geist & Geist Mono
 - **Rendering Strategy:** Static-first, React Server Components by default; Client Components restricted to interactive elements.
 - **Interactive Visuals:**
-  - **Home Point-World:** Three.js scroll-driven scene ([`design-docs/prototypes/home-scene/`](file:///home/sigisgood/rekanmu/company-website/design-docs/prototypes/home-scene/)).
+  - **Home Point-World:** Three.js scroll-driven scene; point generation runs in a module Worker. Reduced motion and WebGL/Worker failures use the complete static Home content ([`design-docs/prototypes/home-scene/`](file:///home/sigisgood/rekanmu/company-website/design-docs/prototypes/home-scene/), [`docs/homepage-layout-locks.md`](docs/homepage-layout-locks.md)).
   - **Businesses Hero:** Plain WebGL point renderer with binary point data ([`design-docs/prototypes/businesses-hero.source.js`](file:///home/sigisgood/rekanmu/company-website/design-docs/prototypes/businesses-hero.source.js)).
-  - **Inner Pages:** Static CSS/HTML with still renders; WebGL isolated from rest of site.
+  - **Business Views:** Plain WebGL point viewers on business plates and business-detail hero/Next sections, with matching static specimens as fallback.
+  - **About:** Four approved team photographs in a scroll-driven desktop slideshow; mobile/tablet and reduced-motion layouts stack the images.
+  - **Other inner-page content:** Server-rendered HTML/CSS/React with approved still assets; no other WebGL.
+
+English and Indonesian Home content and route metadata share the approved locale-specific copy. See [`docs/development.md`](docs/development.md) for runtime behavior and current verification.
 
 ---
 

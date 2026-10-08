@@ -1,7 +1,7 @@
-# Homepage layout locks — Sprint 3 handoff
+# Homepage layout locks — Sprint 3
 
-**Status:** Owner-approved layout and interaction constraints, current as of 7 October 2026.
-**Purpose:** Keep Sprint 3 implementation from reopening accepted Home layouts or restoring superseded prototype behavior.
+**Status:** Owner-approved layout and interaction constraints; Home flight implementation verified on 7 October 2026.
+**Purpose:** Keep implementation and follow-up work aligned with accepted Home layouts and prevent superseded prototype behavior from returning.
 
 This is an implementation handoff, not a new design. Correct code to match a lock. Change a lock only after the owner gives new direction. Exact approved copy remains in [`plans/page-maps/HOME.md`](../plans/page-maps/HOME.md).
 
@@ -13,7 +13,7 @@ This is an implementation handoff, not a new design. Correct code to match a loc
 4. Page maps govern visible copy, routes and CTA wording. Never infer copy from a screenshot when the page map has the approved string.
 5. Tests protect observed layout behavior; they do not authorize changing a design decision to make an assertion pass.
 
-The `design-docs/` baseline is present in the implementation workspace but excluded by Git. This repository handoff records the owner-approved constraints needed for the next sprint; keep it aligned with the local design package.
+The `design-docs/` baseline is present in the implementation workspace but excluded by Git. This repository handoff records the owner-approved constraints and current implementation state; keep it aligned with the local design package.
 
 ## Lock status
 
@@ -24,13 +24,23 @@ The `design-docs/` baseline is present in the implementation workspace but exclu
 | Home Products & Services | Locked | Preserve the desktop proportions and the stacked tablet/mobile layout. |
 | Footer | Locked | Preserve the seamless visual, column order, contact spacing, point field and spotlight behavior. |
 | Clients & Partners | Owner-directed refinement, still in progress | Keep the latest full-color/no-pointer direction; it has not been declared finally locked. |
-| Home point-world flight | Approved design, pending implementation in the current route | Implement from the approved scene sources. Do not redesign its map, timeline, camera or chapter order. |
+| Home point-world flight | Implemented and verified against the approved references | Preserve the approved map, timeline, camera, business stops and chapter order. Treat further immersion changes as deferred until the owner reopens scope. |
 
 ## Page order and implementation snapshot
 
 The approved Home sequence is: shared header → Home hero → continuous point-world flight and text chapters → Products & Services → Clients & Partners → “Start a Conversation” closing card → shared footer. The point-world chapter order and timing remain specified in `design-docs/prototypes/home-scene/` and `design-docs/DECISIONS.md`.
 
-**Observed in the app on 7 October 2026:** `FoundationPage` currently renders the hero, `HomeCatalogue` (Products & Services and Clients & Partners), and closing card. `Document` supplies the shared header and footer. The Home flight and its chapters are not currently mounted in the route. Build that missing piece from `design-docs/prototypes/home.html` and `design-docs/prototypes/home-scene/`; do not treat its absence as permission to alter the approved experience.
+**Observed in the app on 7 October 2026:** `FoundationPage` mounts `HomeScene` for both localized Home routes, followed by `HomeCatalogue` (Products & Services and Clients & Partners) and the closing card. The shared document supplies the header and footer. The flight implementation follows `design-docs/prototypes/home.html` and `design-docs/prototypes/home-scene/`; EN/ID copy and localized route metadata are present.
+
+### Home flight implementation notes
+
+- Keep the approved scroll stage at 20 viewport heights with a sticky, viewport-sized scene. Its timeline and camera follow the approved scene package. All 19 reference positions were captured; representative opening and mid-flight poses were visually compared with the references.
+- At 901 px and wider with a landscape aspect ratio above 4:5, place non-hero flight copy at the left-middle by vertically centering each active chapter at 50% while retaining the left gutter. Keep the Home hero in its existing upper-left position and preserve current tablet/mobile chapter placement.
+- Point generation runs in a module Worker and transfers typed-array buffers to the renderer. The verified normal and reduced-density counts are 672,052 and 376,041 points.
+- At tall mobile/tablet business stops, size the blue focus frame to about 67% of viewport width (0.90 of the previous 74% base) so its label clears the active subtitle by at least 48 px. Keep it inside the viewport at 390 × 844 and 768 × 1024. At compact landscape sizes up to 1280 × 900 with an aspect ratio from 0.8 to 1.6, keep the normal frame ratio at 0.60 (about 44% of viewport height) with at least 40 px between the frame and chapter text. Wide desktop framing remains 74% of viewport height.
+- Show the numbered business label just above the blue frame on desktop, tablet and mobile while the frame faces the camera; keep its 12 px Geist Mono styling, projected top-left position and exit fade.
+- Keep the canvas as progressive enhancement over real DOM copy and links. Reduced motion, unavailable WebGL, worker failure and WebGL context loss must leave the complete Home content in readable static flow.
+- The browser regression matrix covers desktop, tablet and mobile. Real-device GPU and frame-time performance validation remains a release check under `TECH-STACK.md`.
 
 ## Shared navigation
 
@@ -41,7 +51,7 @@ The approved Home sequence is: shared header → Home hero → continuous point-
 
 ## Home hero
 
-The approved headline/copy is in the Home page map. The first phrase stays solid; the second uses point type. Keep the logo square to the right and the CTA below the headline.
+The approved headline/copy is in the Home page map. The first phrase stays solid; the second uses point type. Keep the square geometry locked.
 
 At widths **901 px and wider**, preserve the owner-locked layout:
 
@@ -53,7 +63,9 @@ h1 font-size: min(9.2vw, 13.4svh);
 
 The square center remains at `68vw` and its side is `min(40svh, 30vw)`. Keep Geist 500, `0.9` line height, `-0.05em` tracking, a 32 px CTA gap and CTA minimum height of 56 px. At **1440 × 900**, expect a 120.6 px heading, 751.2 px text column, five lines and a CTA inside the viewport.
 
-**Do not apply this desktop override at 900 px or below.** Preserve the existing proportional tablet/mobile hero. The desktop navigation breakpoint (821 px) and the special hero breakpoint (901 px) are intentionally different.
+**Do not apply this desktop override at 900 px or below.** Preserve the existing proportional tablet/mobile hero. Place the CTA below the initial square with a 24 px gap and keep it vertically anchored through the opening scene collapse; do not let it ride upward over the point field. At 390 × 844 and 768 × 1024, it must remain within the viewport. The desktop navigation breakpoint (821 px) and the special hero breakpoint (901 px) are intentionally different.
+
+As the opening window fills the screen, preserve the hero's initial heading position, width, type scale, line breaks and proportional point grid in its behind-the-world copy. Keep the CTA anchored to its opening position until the hero fades.
 
 ## Products & Services
 
@@ -63,6 +75,7 @@ The square center remains at `68vw` and its side is `min(40svh, 30vw)`. Keep Gei
 - When scroll-driven animation is supported and reduced motion is not requested, pin the section for one viewport plus 2700 px of scroll. Move the row linearly from zero to its full travel; stop when scrolling stops and reverse on scroll-up. Each stream panel is `max(46vw, 340px)` and separated by a hairline.
 - The title remains **83% of the Home hero size**—about **100.1 px at 1440 × 900**, smaller than the hero. Preserve the type ratios to this title: count `3.75×`, stream name `0.568×`, intro lead `0.243×`, description `max(16px, 0.18×)`. Keep the count/name gap between 20 and 32 px and keep both inside the panel, below the sticky header.
 - Hover or keyboard focus opens the description and turns the count blue while shrinking it to 0.86. The same information remains available without hover. Counts are derived from approved catalogue data at build time; do not hard-code them.
+- On desktop at **901 px and wider**, use the finer proportional numeric point grid: pitch `0.04em`, radius `max(0.35px, 0.0065em)`, edge `max(0.5px, 0.01em)`. Keep the global point grid on tablet and mobile.
 
 ### Tablet and mobile: 820 px and below
 
@@ -92,7 +105,7 @@ The latest owner direction replaces the original grey-logo/pointer-hover baselin
 ## Type, motion and regression checks
 
 - Use Geist and Geist Mono only. Body copy stays at least 16 px. No eyebrows, decorative card frames, background textures behind running text, or invented section content.
-- Global point type remains proportional: `0.055em` pitch, `max(0.5px, 0.009em)` radius and `max(0.72px, 0.014em)` edge, with no font-size cutoff. The Home Partners title's local override above is the documented exception.
+- Global point type remains proportional: `0.055em` pitch, `max(0.5px, 0.009em)` radius and `max(0.72px, 0.014em)` edge, with no font-size cutoff. Home desktop counts and the About dotted figure use the finer numeral grid above; the Home Partners title keeps its separate local override.
 - Honor `prefers-reduced-motion`; keep all information in normal reading order and do not rely on hover alone. Preserve visible keyboard focus.
 - Use the approved English/Indonesian copy. Check for clipped headings, dots or counters, overlap, dead CTAs and horizontal overflow at **1440 × 900**, **768 × 1024**, **390 × 844**, and **320 px**; also test keyboard and reduced motion.
-- Run `pnpm exec playwright test tests/home-hero.spec.ts tests/home-catalogue.spec.ts` and `pnpm typecheck`. Keep the assertions in these tests aligned with the locks above; update a test only when an owner-approved design decision changes.
+- Run the full Playwright matrix and `pnpm typecheck`. Keep `tests/home-hero.spec.ts`, `tests/home-catalogue.spec.ts`, `tests/home-scene.spec.ts`, and `tests/locale-metadata.spec.ts` aligned with the locks above; update assertions only when an owner-approved design decision changes. The 7 October 2026 full matrix reported 139 passed and 29 project-conditional skips.
