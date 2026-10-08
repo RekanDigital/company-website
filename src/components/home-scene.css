@@ -500,7 +500,7 @@ main:has(.homeScene[data-home-loading-state="loading"], .homeScene[data-home-loa
   top: auto;
   left: auto;
   margin: 32px var(--gutter) 40px;
-  color: var(--blue);
+  color: var(--ink);
   opacity: 1 !important;
   visibility: visible !important;
   transform: none !important;

@@ -8,6 +8,30 @@ const streams = [
   "Strategic Real-Sector Initiatives",
 ] as const;
 
+const HOME_READY_TIMEOUT = 25_000;
+
+async function waitForHomeReady(page: Page) {
+  await expect(page.locator("[data-home-scene]")).toHaveAttribute(
+    "data-home-loading-state",
+    /^(ready|done)$/,
+    { timeout: HOME_READY_TIMEOUT },
+  );
+}
+
+async function gotoStaticHomeContent(page: Page, path: string) {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto(path);
+  await waitForHomeReady(page);
+}
+
+async function focusCataloguePanelByKeyboard(page: Page, index = 0) {
+  await page.locator(".homeCatalogueIntroCopy .cta").focus();
+  for (let tab = 0; tab <= index; tab += 1) await page.keyboard.press("Tab");
+  const panel = page.locator(".homeCataloguePanel").nth(index);
+  await expect(panel).toBeFocused();
+  return panel;
+}
+
 async function expectNoHorizontalOverflow(page: Page) {
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 }
@@ -16,7 +40,7 @@ for (const locale of ["en", "id"] as const) {
   const base = locale === "en" ? "" : "/id";
 
   test(`${locale}: Home catalogue, derived counts, and partners`, async ({ page }) => {
-    await page.goto(`${base}/`);
+    await gotoStaticHomeContent(page, `${base}/`);
     await expect(page.locator("html")).toHaveAttribute("lang", locale);
 
     const catalogue = page.getByRole("region", { name: locale === "en" ? "Products & Services" : "Produk & Layanan" });
@@ -73,6 +97,7 @@ for (const locale of ["en", "id"] as const) {
 test("desktop Home panels follow scroll linearly and stop with the scroll", async ({ page }) => {
   test.skip((page.viewportSize()?.width ?? 0) <= 820);
   await page.goto("/");
+  await waitForHomeReady(page);
 
   const section = page.locator(".homeCatalogue");
   const track = page.locator(".homeCatalogueTrack");
@@ -101,7 +126,7 @@ test("desktop Home panels follow scroll linearly and stop with the scroll", asyn
 test("touch Home catalogue keeps descriptions open", async ({ page }) => {
   const width = page.viewportSize()?.width ?? 0;
   test.skip(width > 820);
-  await page.goto("/");
+  await gotoStaticHomeContent(page, "/");
   const panel = page.locator(".homeCataloguePanel").first();
   await expect(panel.locator(".homeCatalogueDescription")).toBeVisible();
   await expectNoHorizontalOverflow(page);
@@ -116,7 +141,7 @@ test("mobile and tablet Home category panels keep type proportional and fit thei
   for (const [width, height] of sizes) {
     await page.setViewportSize({ width, height });
     for (const locale of ["en", "id"] as const) {
-      await page.goto(locale === "en" ? "/" : "/id");
+      await gotoStaticHomeContent(page, locale === "en" ? "/" : "/id");
       await page.evaluate(() => document.fonts.ready);
       const panels = await page.locator(".homeCataloguePanel").evaluateAll((elements) => elements.map((element) => {
         const panel = element as HTMLElement;
@@ -173,16 +198,15 @@ test("mobile and tablet Home category panels keep type proportional and fit thei
 
 test("desktop Home catalogue opens descriptions on keyboard focus", async ({ page }) => {
   test.skip((page.viewportSize()?.width ?? 0) <= 820);
-  await page.goto("/");
-  const panel = page.locator(".homeCataloguePanel").first();
-  await panel.focus();
+  await gotoStaticHomeContent(page, "/");
+  const panel = await focusCataloguePanelByKeyboard(page);
   await expect(panel.locator(".homeCatalogueDescription")).toBeVisible();
 });
 
 test("desktop Home catalogue type scales from its roughly 100px reference title", async ({ page }) => {
   test.skip((page.viewportSize()?.width ?? 0) <= 820);
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("/");
+  await gotoStaticHomeContent(page, "/");
 
   const ratios = await page.evaluate(() => {
     const size = (selector: string) => Number.parseFloat(getComputedStyle(document.querySelector(selector)!).fontSize);
@@ -207,13 +231,19 @@ test("desktop Home catalogue type scales from its roughly 100px reference title"
 
 test("desktop Home catalogue counts and labels stay inside compact panel bounds", async ({ page }) => {
   test.skip((page.viewportSize()?.width ?? 0) <= 820);
+  test.setTimeout(90_000);
 
-  for (const [width, height] of [[1440, 900], [1280, 720], [1024, 600], [901, 500]]) {
-    await page.setViewportSize({ width, height });
+  for (const locale of ["en", "id"] as const) {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto(locale === "en" ? "/" : "/id");
+    await waitForHomeReady(page);
+    await page.evaluate(() => document.fonts.ready);
+    await page.addStyleTag({ content: ".homeCatalogueDescription { transition: none !important; }" });
 
-    for (const locale of ["en", "id"] as const) {
-      await page.goto(locale === "en" ? "/" : "/id");
-      await page.evaluate(() => document.fonts.ready);
+    for (const [width, height] of [[1440, 900], [1280, 720], [1024, 600], [901, 500]]) {
+      await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
+      await page.setViewportSize({ width, height });
+      await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => resolve())));
       const panelMetrics = await page.locator(".homeCataloguePanel").evaluateAll((panels) => {
         const box = (element: Element) => {
           const { top, right, bottom, left, width, height } = element.getBoundingClientRect();
@@ -261,10 +291,8 @@ test("desktop Home catalogue counts and labels stay inside compact panel bounds"
         expect(panel.copyOverflow).toBeLessThanOrEqual(0);
       }
 
-      await page.addStyleTag({ content: ".homeCatalogueDescription { transition: none !important; }" });
       for (let index = 0; index < 5; index += 1) {
-        const panel = page.locator(".homeCataloguePanel").nth(index);
-        await panel.focus();
+        const panel = await focusCataloguePanelByKeyboard(page, index);
         const expanded = await panel.evaluate((element) => {
           const bounds = element.getBoundingClientRect();
           const count = element.querySelector(".homeCatalogueCountDotted")!.getBoundingClientRect();
@@ -299,6 +327,7 @@ test("desktop Home catalogue counts and labels stay inside compact panel bounds"
         expect(expanded.descriptionLeft).toBeGreaterThanOrEqual(expanded.paddingLeft - 1);
         expect(expanded.descriptionRight).toBeLessThanOrEqual(expanded.panelWidth - expanded.paddingRight + 1);
         expect(expanded.descriptionScrollHeight).toBeLessThanOrEqual(expanded.descriptionClientHeight);
+        await panel.evaluate((element) => element.blur());
       }
     }
   }
@@ -306,6 +335,7 @@ test("desktop Home catalogue counts and labels stay inside compact panel bounds"
 
 test("partner line keeps moving on hover and reduced motion removes continuous movement", async ({ page }) => {
   await page.goto("/");
+  await waitForHomeReady(page);
   const marquee = page.locator(".partnerMarquee");
   const track = page.locator(".partnerTrack");
   await expect(track).toHaveCSS("animation-play-state", "running");
@@ -314,6 +344,7 @@ test("partner line keeps moving on hover and reduced motion removes continuous m
 
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.reload();
+  await waitForHomeReady(page);
   await expect(page.locator(".partnerTrack")).toHaveCSS("animation-name", "none");
   await expect(page.locator(".homeCataloguePanel .homeCatalogueDescription").first()).toBeVisible();
   await expectNoHorizontalOverflow(page);

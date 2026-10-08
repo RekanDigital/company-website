@@ -157,6 +157,10 @@ The owner directed that all eleven approved partner PNGs appear in their supplie
 
 Use the Origin Button cursor-origin circle fill for every CTA across pages, locales, and viewport sizes. Preserve each CTA's Next.js link semantics, existing label and destination, and site pill geometry and size variants. Use an ink outline and fill on light surfaces, and a white outline and fill on dark surfaces; switch the label to a contrasting color while filled. Pointer hover/press starts the 0.5 s fill at the pointer; keyboard focus starts it at the center. Keep visible focus styling and disable scale motion when reduced motion is requested. All CTA links must use the shared `ButtonLink` / `OriginButton` implementation.
 
+### Owner-approved Home hero CTA color — 8 October 2026
+
+On the light Home ground, the hero CTA uses the near-black ink token `#0E1116` (RGB 14, 17, 22) for its resting label and outline, including the static/reduced-motion fallback. Preserve the white CTA treatment where the flight scene is dark; keep its fill and contrast behavior governed by the global Origin Button lock above.
+
 ### Owner-approved business point views and About slideshow — 8 October 2026
 
 The approved Sprint 3 integration adds these scoped visual behaviors and supersedes the earlier static-only page descriptions and About world-band mockup:

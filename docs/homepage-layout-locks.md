@@ -61,7 +61,7 @@ h1 width: calc(68vw - min(20svh, 15vw) - var(--gutter));
 h1 font-size: min(9.2vw, 13.4svh);
 ```
 
-The square center remains at `68vw` and its side is `min(40svh, 30vw)`. Keep Geist 500, `0.9` line height, `-0.05em` tracking, a 32 px CTA gap and CTA minimum height of 56 px. At **1440 × 900**, expect a 120.6 px heading, 751.2 px text column, five lines and a CTA inside the viewport.
+The square center remains at `68vw` and its side is `min(40svh, 30vw)`. Keep Geist 500, `0.9` line height, `-0.05em` tracking, a 32 px CTA gap and CTA minimum height of 56 px. At **1440 × 900**, expect a 120.6 px heading, 751.2 px text column, five lines and a CTA inside the viewport. On light ground, the hero CTA's resting label and outline use near-black ink `#0E1116` (RGB 14, 17, 22), including the static/reduced-motion fallback; preserve the white treatment over dark flight imagery.
 
 **Do not apply this desktop override at 900 px or below.** Preserve the existing proportional tablet/mobile hero. Place the CTA below the initial square with a 24 px gap and keep it vertically anchored through the opening scene collapse; do not let it ride upward over the point field. At 390 × 844 and 768 × 1024, it must remain within the viewport. The desktop navigation breakpoint (821 px) and the special hero breakpoint (901 px) are intentionally different.
 

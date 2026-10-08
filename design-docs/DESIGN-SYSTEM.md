@@ -202,7 +202,7 @@ The only pill on the site.
 .cta.sm{ min-height: 48px; font-size: 16px; padding: 0 24px; }
 ```
 
-- At rest: transparent fill with an ink outline on light surfaces and a white outline on dark surfaces.
+- At rest: transparent fill with ink `#0E1116` (RGB 14, 17, 22) text and outline on light surfaces, and white text and outline on dark surfaces.
 - Pointer hover or press: a circle grows from the pointer position to cover the pill over 0.5 s. It fills with ink on light surfaces and white on dark surfaces; the label switches to the contrasting color. Keyboard focus starts the fill from the pill's center.
 - Reduced-motion settings remove the scale animation while preserving the theme-colored focus/hover state.
 - On the closing card the button has a white outline and transparent fill at rest, then fills white with a dark label.

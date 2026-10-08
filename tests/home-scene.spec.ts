@@ -96,7 +96,7 @@ test("the scene shell only appears on Home", async ({ page }) => {
   }
 });
 
-test("Home hero CTA stays brand blue outside the scene blend layer", async ({ page }) => {
+test("Home hero CTA uses near-black ink outside the scene blend layer", async ({ page }) => {
   await page.goto("/");
   const scene = page.locator("[data-home-scene]");
   const cta = scene.locator("[data-home-flight-hero-button]");
@@ -106,9 +106,19 @@ test("Home hero CTA stays brand blue outside the scene blend layer", async ({ pa
     borderColor: getComputedStyle(element).borderTopColor,
     chapterBlendMode: getComputedStyle(element.parentElement!).mixBlendMode,
   }));
-  expect(style.color).toBe("rgb(49, 121, 203)");
-  expect(style.borderColor).toBe("rgb(49, 121, 203)");
+  expect(style.color).toBe("rgb(14, 17, 22)");
+  expect(style.borderColor).toBe("rgb(14, 17, 22)");
   expect(style.chapterBlendMode).toBe("normal");
+});
+
+test("reduced-motion Home hero CTA keeps near-black ink on the light ground", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  const scene = page.locator("[data-home-scene]");
+  await expect(scene).toHaveAttribute("data-home-flight-mode", "static");
+  const cta = scene.locator("[data-home-flight-hero-button]");
+  await expect(cta).toHaveCSS("color", "rgb(14, 17, 22)");
+  await expect(cta).toHaveCSS("border-top-color", "rgb(14, 17, 22)");
 });
 
 test("desktop flight chapter copy sits left-middle; tablet and mobile keep their placement", async ({ page }) => {
