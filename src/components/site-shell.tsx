@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useRef, useState, type PointerEvent } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type PointerEvent } from "react";
 
 import {
   CONTACT,
@@ -51,9 +51,9 @@ function LanguageToggle({ locale, onNavigate }: { locale: Locale; onNavigate?: (
   );
 }
 
-function Brand({ locale, onNavigate }: { locale: Locale; onNavigate?: () => void }) {
+function Brand({ locale, onNavigate, transitionTypes }: { locale: Locale; onNavigate?: () => void; transitionTypes?: string[] }) {
   return (
-    <Link className="site-brand" href={localizeHref("/", locale)} onClick={onNavigate}>
+    <Link className="site-brand" href={localizeHref("/", locale)} onNavigate={onNavigate} transitionTypes={transitionTypes}>
       <Image src="/assets/logo/logo-rekanmu.png" width={32} height={32} alt="" priority />
       <span>RekanMU</span>
     </Link>
@@ -110,9 +110,11 @@ export function SiteHeader({ locale }: { locale: Locale }) {
     };
   }, [open]);
 
-  useEffect(() => {
-    if (dialogRef.current?.open) dialogRef.current.close();
+  useLayoutEffect(() => {
+    const wasOpen = dialogRef.current?.open;
+    if (wasOpen) dialogRef.current?.close();
     setOpen(false);
+    if (wasOpen) document.getElementById("main")?.focus({ preventScroll: true });
   }, [pathname]);
 
   useEffect(() => {
@@ -135,21 +137,29 @@ export function SiteHeader({ locale }: { locale: Locale }) {
     const dialog = dialogRef.current;
     if (dialog?.classList.contains("is-closing")) return;
     if (
-      restoreFocus &&
       dialog?.open &&
       dialog.classList.contains("is-visible") &&
       window.matchMedia("(max-width: 820px) and (prefers-reduced-motion: no-preference)").matches
     ) {
+      restoreFocusRef.current = restoreFocus;
       dialog.classList.add("is-closing");
       const panel = dialog.querySelector(".site-menu__panel");
       const duration = panel ? Number.parseFloat(getComputedStyle(panel).transitionDuration) : 0;
-      closeFallbackRef.current = window.setTimeout(finishClose, (Number.isFinite(duration) ? duration * 1000 : 0) + 100);
+      closeFallbackRef.current = window.setTimeout(() => finishClose(restoreFocus), (Number.isFinite(duration) ? duration * 1000 : 0) + 100);
       return;
     }
     finishClose(restoreFocus);
   };
 
-  const navigate = () => close(false);
+  const navigate = (href: string) => {
+    if (
+      href.split("#")[0] !== pathname &&
+      typeof document.startViewTransition === "function" &&
+      CSS.supports("selector(:active-view-transition-type(menu-navigation))") &&
+      window.matchMedia("(max-width: 820px) and (prefers-reduced-motion: no-preference)").matches
+    ) return;
+    close(false);
+  };
 
   return (
     <>
@@ -216,7 +226,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
             event.propertyName === "transform" &&
             dialogRef.current?.classList.contains("is-closing")
           ) {
-            finishClose();
+            finishClose(restoreFocusRef.current);
           }
         }}
         onKeyDown={(event) => {
@@ -247,7 +257,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
         </button>
 
         <div className="site-menu__top gut">
-          <Brand locale={locale} onNavigate={navigate} />
+          <Brand locale={locale} onNavigate={() => navigate(localizeHref("/", locale))} transitionTypes={pathname !== localizeHref("/", locale) ? ["menu-navigation"] : undefined} />
         </div>
 
         <div className="site-menu__panel">
@@ -278,7 +288,8 @@ export function SiteHeader({ locale }: { locale: Locale }) {
                 className={activeIndex !== null && activeIndex !== index ? "is-dimmed" : ""}
                 onMouseEnter={() => setActiveIndex(index)}
                 onFocus={() => setActiveIndex(index)}
-                onClick={navigate}
+                onNavigate={() => navigate(item.href)}
+                transitionTypes={item.href.split("#")[0] !== pathname ? ["menu-navigation"] : undefined}
               >
                 {item.label}
               </Link>
@@ -292,7 +303,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
           )}
 
           <div className="site-menu__bottom gut">
-            <LanguageToggle locale={locale} onNavigate={navigate} />
+            <LanguageToggle locale={locale} onNavigate={() => close(false)} />
             <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
           </div>
         </div>

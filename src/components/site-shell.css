@@ -513,8 +513,8 @@
   .site-menu-button__label,
   .site-menu-mark,
   .site-menu__close-label { display: none; }
-  .site-menu-button[aria-expanded="true"] { visibility: hidden; }
-  .site-header--menu-open .site-brand { visibility: hidden; }
+  body:has(.site-menu[open]) .site-menu-button[aria-expanded="true"] { visibility: hidden; }
+  body:has(.site-menu[open]) .site-header--menu-open .site-brand { visibility: hidden; }
   .site-menu-toggle { display: block; }
   .site-menu__top { opacity: 0; }
   .site-menu[open].is-visible:not(.is-closing) .site-menu__top { opacity: 1; }
@@ -531,6 +531,47 @@
 }
 
 @media (max-width: 820px) and (prefers-reduced-motion: no-preference) {
+  .site-menu[open] .site-menu__panel { view-transition-name: site-menu; }
+  .site-menu[open] .site-menu__top { view-transition-name: site-menu-brand; }
+  .site-menu-button .site-menu-toggle > span:nth-child(1),
+  .site-menu[open] .site-menu__close .site-menu-toggle > span:nth-child(1) { view-transition-name: menu-toggle-top; }
+  .site-menu-button .site-menu-toggle > span:nth-child(2),
+  .site-menu[open] .site-menu__close .site-menu-toggle > span:nth-child(2) { view-transition-name: menu-toggle-middle; }
+  .site-menu-button .site-menu-toggle > span:nth-child(3),
+  .site-menu[open] .site-menu__close .site-menu-toggle > span:nth-child(3) { view-transition-name: menu-toggle-bottom; }
+  body:has(.site-menu[open]) .site-menu-button .site-menu-toggle > span { view-transition-name: none; }
+  :root:active-view-transition-type(menu-navigation) .site-menu-button .site-menu-toggle > span { visibility: visible; }
+  :root:active-view-transition-type(menu-navigation)::view-transition-group(site-menu),
+  :root:active-view-transition-type(menu-navigation)::view-transition-group(site-menu-brand) {
+    animation: none;
+    z-index: 200;
+  }
+  :root:active-view-transition-type(menu-navigation)::view-transition-group(site-menu-brand) { z-index: 201; }
+  :root:active-view-transition-type(menu-navigation)::view-transition-group(menu-toggle-top),
+  :root:active-view-transition-type(menu-navigation)::view-transition-group(menu-toggle-middle),
+  :root:active-view-transition-type(menu-navigation)::view-transition-group(menu-toggle-bottom) {
+    z-index: 202;
+    animation-duration: .62s;
+    animation-timing-function: cubic-bezier(.4, 0, .2, 1);
+  }
+  :root:active-view-transition-type(menu-navigation)::view-transition-old(menu-toggle-top),
+  :root:active-view-transition-type(menu-navigation)::view-transition-new(menu-toggle-top),
+  :root:active-view-transition-type(menu-navigation)::view-transition-old(menu-toggle-middle),
+  :root:active-view-transition-type(menu-navigation)::view-transition-new(menu-toggle-middle),
+  :root:active-view-transition-type(menu-navigation)::view-transition-old(menu-toggle-bottom),
+  :root:active-view-transition-type(menu-navigation)::view-transition-new(menu-toggle-bottom) { animation-duration: .62s; }
+  :root:active-view-transition-type(menu-navigation)::view-transition-old(site-menu),
+  :root:active-view-transition-type(menu-navigation)::view-transition-old(site-menu-brand) {
+    animation: site-menu-navigation-out .62s cubic-bezier(.4, 0, .2, 1) both;
+    mix-blend-mode: normal;
+  }
+  :root:active-view-transition-type(menu-navigation)::view-transition-new(site-menu),
+  :root:active-view-transition-type(menu-navigation)::view-transition-new(site-menu-brand) { display: none; }
+  :root:active-view-transition-type(menu-navigation)::view-transition-new(page-content),
+  :root:active-view-transition-type(menu-navigation)::view-transition-new(hero-title-1) { animation-delay: .62s; }
+  :root:active-view-transition-type(menu-navigation)::view-transition-new(hero-title-2) { animation-delay: .8s; }
+  :root:active-view-transition-type(menu-navigation)::view-transition-new(hero-copy) { animation-delay: .98s; }
+  :root:active-view-transition-type(menu-navigation)::view-transition-new(hero-action) { animation-delay: 1.16s; }
   :root { --site-menu-ease: cubic-bezier(.4, 0, .2, 1); }
   .site-menu__top { transition: opacity .32s var(--site-menu-ease); }
   .site-menu__panel { transition: transform .76s var(--site-menu-ease); }
@@ -558,6 +599,11 @@
     transform: translateY(-6px) rotate(-45deg);
   }
 
+}
+
+@keyframes site-menu-navigation-out {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100vw); }
 }
 
 @media (max-width: 560px) {
