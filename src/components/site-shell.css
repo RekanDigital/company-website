@@ -577,3 +577,27 @@
   .site-footer__points--spot { transition: none; }
   .site-footer__social-link { transition: none; }
 }
+
+@keyframes contact-card-overlap {
+  from { transform: translateY(35svh); }
+  to { transform: none; }
+}
+
+/* Reserve the overlap behind the card so the preceding content stays readable. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view(block)) and (animation-range: entry 0% entry 100%) {
+    main > :has(+ .closing-card) {
+      padding-bottom: max(var(--section-pad), clamp(96px, 18svh, 180px));
+    }
+
+    .closing-card {
+      z-index: 1;
+      margin-top: calc(-1 * clamp(96px, 18svh, 180px));
+      animation: contact-card-overlap linear both;
+      animation-timeline: view(block);
+      animation-range: entry 0% entry 100%;
+    }
+
+    .closing-card:focus-within { animation: none; }
+  }
+}

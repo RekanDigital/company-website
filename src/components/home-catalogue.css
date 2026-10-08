@@ -6,7 +6,6 @@
   position: static;
   height: auto;
   overflow: visible;
-  border-block: var(--rule-quiet);
 }
 
 .homeCatalogueTrack {
@@ -43,7 +42,6 @@
   justify-content: flex-end;
   overflow: hidden;
   padding: clamp(28px, 3.4vw, 48px);
-  border-top: var(--rule-quiet);
   isolation: isolate;
 }
 
@@ -152,6 +150,7 @@
 }
 
 .homeCataloguePanel:focus-visible {
+  z-index: 3;
   outline-offset: -8px;
 }
 
@@ -211,6 +210,7 @@
   to { transform: translateX(-50%); }
 }
 
+
 @media (min-width: 821px) and (prefers-reduced-motion: no-preference) {
   @supports (view-timeline-name: --home-catalogue) and (animation-timeline: --home-catalogue) and (animation-range: contain 0% contain 100%) {
     .homeCatalogue {
@@ -246,7 +246,6 @@
       height: 100svh;
       flex: none;
       border-top: 0;
-      border-left: var(--rule-quiet);
     }
 
     .homeCatalogueDescription {
@@ -334,5 +333,99 @@
 @media (max-width: 480px) {
   .homeCatalogueIntro {
     gap: 32px;
+  }
+}
+
+/* The catalogue owns these timelines, so clipped sticky children track the page. */
+@keyframes home-card-rise {
+  from { transform: translateY(72svh) rotate(6deg); clip-path: inset(0 0 28% 0); }
+  to { transform: none; clip-path: inset(0); }
+}
+
+@keyframes home-sheet-open {
+  from { clip-path: inset(0 0 100% 0); transform: translateY(80px); }
+  to { clip-path: inset(0); transform: none; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view(block)) and (animation-range: entry 0% entry 100%) {
+    .homeCatalogueIntro {
+      position: relative;
+      isolation: isolate;
+      overflow: clip;
+      view-timeline-name: --home-intro;
+      view-timeline-axis: block;
+    }
+
+    .homePartners {
+      background: var(--ground);
+      animation: home-sheet-open linear both;
+      animation-timeline: view(block);
+      animation-range: entry 0% entry 100%;
+    }
+
+    .homeCataloguePanel:focus-visible,
+    .homePartners + .closing-card:focus-within {
+      animation: none;
+      clip-path: none;
+      transform: none;
+    }
+  }
+}
+
+@media (min-width: 821px) and (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: --home-catalogue) and (animation-range: contain 0% contain 100%) {
+    .homeCataloguePanel {
+      background: var(--ground);
+      transform-origin: right bottom;
+      animation: home-card-rise linear both;
+      animation-timeline: --home-catalogue;
+      animation-range: contain var(--card-enter) contain var(--card-land);
+    }
+
+    .homeCataloguePanel:nth-child(2) { --card-enter: 0%; --card-land: 17%; }
+    .homeCataloguePanel:nth-child(3) { --card-enter: 20%; --card-land: 37%; }
+    .homeCataloguePanel:nth-child(4) { --card-enter: 40%; --card-land: 57%; }
+    .homeCataloguePanel:nth-child(5) { --card-enter: 60%; --card-land: 77%; }
+    .homeCataloguePanel:nth-child(6) { --card-enter: 80%; --card-land: 97%; }
+  }
+}
+
+@media (max-width: 820px) and (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view(block)) and (animation-range: entry 0% entry 100%) {
+    .homeCataloguePanel {
+      position: sticky;
+      top: 76px;
+      min-height: 72svh;
+      justify-content: center;
+      background: var(--ground);
+    }
+  }
+}
+
+@keyframes home-postflight-reveal {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view(block)) and (animation-range: entry 0% entry 100%) {
+    .homeCatalogueIntro h2,
+    .homeCatalogueIntroCopy {
+      animation: home-postflight-reveal linear both;
+      animation-timeline: --home-intro;
+    }
+
+    .homeCatalogueIntro h2 { animation-range: entry 55% entry 88%; }
+    .homeCatalogueIntroCopy { animation-range: entry 68% entry 100%; }
+
+    .homeCatalogueIntro:focus-within .homeCatalogueIntroCopy { animation: none; }
+  }
+}
+
+@media (min-width: 821px) and (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: --home-catalogue) and (animation-range: entry 0% entry 100%) {
+    .homeCatalogueIntro h2,
+    .homeCatalogueIntroCopy { animation-timeline: --home-catalogue; }
   }
 }
