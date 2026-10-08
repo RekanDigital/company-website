@@ -178,9 +178,9 @@ export function FoundationPage({
         <section className={`foundationHero gut${business ? " businessDetailHero" : ""}`}>
           {business ? <BusinessHeroArt business={business} locale={locale} /> : null}
           <h1 className="disp">
-            {hero.title.solid}
+            <span className="routeHeroLine routeHeroLine--solid">{hero.title.solid}</span>
             <br />
-            <PointType>{hero.title.point}</PointType>
+            <span className="routeHeroLine routeHeroLine--point"><PointType>{hero.title.point}</PointType></span>
           </h1>
 
           {hero.tagline || hero.lead ? (

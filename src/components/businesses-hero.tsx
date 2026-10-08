@@ -144,8 +144,8 @@ export function BusinessesHero({
       <canvas aria-hidden="true" className="businessesHeroOverlay" ref={overlay} />
       <div className="businessesHeroTitle">
         <h1 className="disp" id="businesses-hero-title">
-          {title.solid}<br />
-          <span className="dots businessesHeroGhost" ref={ghost}>{title.point}</span>
+          <span className="routeHeroLine routeHeroLine--solid">{title.solid}</span><br />
+          <span className="dots businessesHeroGhost routeHeroLine--point" ref={ghost}>{title.point}</span>
         </h1>
       </div>
     </section>

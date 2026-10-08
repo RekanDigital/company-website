@@ -101,8 +101,8 @@ export async function mountBusinessesHero(
   onStateChange: StateChange,
   reducedMotion: boolean,
 ): Promise<BusinessesHeroRenderer> {
-  const context = (canvas.getContext("webgl", { antialias: false, alpha: false, premultipliedAlpha: false })
-    ?? canvas.getContext("experimental-webgl")) as WebGLRenderingContext | null;
+  const context = (canvas.getContext("webgl", { antialias: false, alpha: true, premultipliedAlpha: false })
+    ?? canvas.getContext("experimental-webgl", { antialias: false, alpha: true, premultipliedAlpha: false })) as WebGLRenderingContext | null;
   if (!context) throw new WebGLUnavailableError();
   const gl: WebGLRenderingContext = context;
 
@@ -607,7 +607,8 @@ export async function mountBusinessesHero(
     running = true;
     last = performance.now();
     lastUser = performance.now();
-    frameId = requestAnimationFrame(frame);
+    // Paint before exposing the ready canvas to a route snapshot.
+    frame(last);
   }
   const resize = () => sampleText();
   window.addEventListener("resize", resize);

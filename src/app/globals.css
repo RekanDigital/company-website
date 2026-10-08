@@ -54,3 +54,73 @@ img { max-width: 100%; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
+
+/* Route snapshots keep navigation native and the shared header stationary. */
+::view-transition { pointer-events: none; }
+::view-transition-group(root),
+::view-transition-old(root),
+::view-transition-new(root) { animation: none; }
+::view-transition-old(root) { display: none; }
+
+::view-transition-group(page-content) { animation: none; }
+::view-transition-old(page-content),
+::view-transition-new(page-content) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-old(page-content) { display: none; }
+
+@keyframes page-fade-in {
+  from { opacity: 0; transform: translateY(100px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (min-width: 1025px) and (prefers-reduced-motion: no-preference) {
+  .site-header { view-transition-name: site-header; }
+  ::view-transition-group(site-header) { animation: none; z-index: 100; }
+  ::view-transition-old(site-header) { display: none; }
+  ::view-transition-new(site-header) { animation: none; }
+
+  ::view-transition-group(page-content) {
+    height: 100vh;
+    overflow: clip;
+    background: var(--ground);
+  }
+  ::view-transition-image-pair(page-content) { isolation: isolate; }
+  ::view-transition-new(page-content) {
+    animation: page-fade-in 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+    background: var(--ground);
+  }
+}
+
+@media (min-width: 1025px) and (prefers-reduced-motion: no-preference) {
+  .routeHeroLine { display: inline-block; max-width: 100%; vertical-align: top; }
+  .routeHeroLine--solid { view-transition-name: hero-title-1; }
+  .foundationHero .routeHeroLine--point,
+  .businessesHero:not(.is-rendering) .routeHeroLine--point,
+  .businessesHero.is-rendering .businessesHeroCanvas { view-transition-name: hero-title-2; }
+  .foundationHeroCopy,
+  .businessOpening p { view-transition-name: hero-copy; }
+  .foundationHeroActions { view-transition-name: hero-action; }
+
+  ::view-transition-group(hero-title-1),
+  ::view-transition-group(hero-title-2),
+  ::view-transition-group(hero-copy),
+  ::view-transition-group(hero-action) { animation: none; z-index: 2; }
+
+  ::view-transition-old(hero-title-1),
+  ::view-transition-old(hero-title-2),
+  ::view-transition-old(hero-copy),
+  ::view-transition-old(hero-action) { display: none; }
+
+  ::view-transition-new(hero-title-1),
+  ::view-transition-new(hero-title-2),
+  ::view-transition-new(hero-copy),
+  ::view-transition-new(hero-action) {
+    mix-blend-mode: normal;
+    animation: page-fade-in 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  ::view-transition-new(hero-title-2) { animation-delay: 180ms; }
+  ::view-transition-new(hero-copy) { animation-delay: 360ms; }
+  ::view-transition-new(hero-action) { animation-delay: 540ms; }
+}
