@@ -1078,3 +1078,93 @@ main:has(.businessesPage) > .businessOpening p {
   from { transform: translateY(72px); }
   to { transform: translateY(0); }
 }
+
+/* Detail reading surfaces share the existing ground-colored section handoff. */
+.businessDetail,
+.businessDetail :is(.businessDetailSection, .detailGrid, .detailGrid article, .nextBusiness) { border: 0; }
+.businessDetailStage { display: contents; }
+.businessDetail .businessDetailSection {
+  padding-block: clamp(28px, 4svh, 44px);
+  gap: clamp(20px, 3vw, 40px);
+  align-items: start;
+}
+.businessDetail :is(.overviewSection, .detailStatementSection) {
+  min-height: min(60svh, 600px);
+  align-content: center;
+}
+.businessDetail .detailInquiry { align-items: center; }
+.businessDetail .detailSectionContent { display: grid; min-width: 0; gap: 20px; }
+.businessDetail .detailContinuation { display: grid; grid-template-columns: minmax(0, 1fr); }
+.businessDetail .detailContinuation > .detailSectionContent { grid-column: auto; }
+.businessDetail .detailGrid { gap: 24px; }
+.businessDetail .detailGrid article { padding: 0; gap: 8px 24px; }
+.businessDetail .staticCopy { gap: 16px; }
+.businessDetail .detailActions { margin-top: 24px; gap: 16px 28px; }
+.businessDetail .detailStatement .statement { margin: 0; }
+.businessDetail .detailActionSection .detailStatement { grid-column: 1; }
+.businessDetail .detailActionSection .detailActions { margin-top: 0; }
+.detailStatementWord { display: inline-block; }
+.businessDetail .nextBusiness { padding-block: 32px; }
+
+@media (max-width: 1100px), (max-aspect-ratio: 1/1), (max-height: 650px) {
+  .businessDetail :is(.overviewSection, .detailSection, .detailInquiry, .detailGrid article) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .businessDetail :is(.detailSectionContent, .detailGrid article p, .detailStatement) { grid-column: auto; }
+  .businessDetail :is(.overviewSection, .detailStatementSection, .detailInquiry) { min-height: 0; }
+  .businessDetail .businessDetailSection { gap: 20px; }
+  .businessDetail .detailGrid { gap: 24px; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) and (animation-range: cover 0% cover 100%) {
+    .businessDetailStage {
+      display: block;
+      position: relative;
+      padding-bottom: 12svh;
+      view-timeline-name: --business-detail-section;
+    }
+    .businessDetailStage + .businessDetailStage { margin-top: -12svh; }
+    .businessDetailStage > :is(.businessDetailSection, .nextBusiness) {
+      position: relative;
+      background: var(--ground);
+      animation: business-detail-surface cubic-bezier(0.4, 0, 0.2, 1) both;
+      animation-timeline: --business-detail-section;
+      animation-range: entry 0% entry 100%;
+    }
+    .businessNextStage { padding-bottom: 0; }
+    .businessDetail .statement { view-timeline-name: --business-detail-statement; }
+    .detailStatementWord {
+      animation: about-statement-word cubic-bezier(0.4, 0, 0.2, 1) both;
+      animation-timeline: --business-detail-statement;
+      animation-range: cover calc(var(--word-start) / 2) cover calc(var(--word-end) / 2);
+    }
+    .businessDetail .detailGrid article {
+      animation: business-plate-rise cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 100%;
+    }
+    .businessDetail :is(.overviewSection > .staticCopy, .detailInquiry > div, .detailSectionContent > .staticCopy) {
+      animation: business-plate-rise cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation-timeline: --business-detail-section;
+      animation-range: entry 12% entry 90%;
+    }
+    @media (min-width: 1101px) and (min-aspect-ratio: 1/1) and (min-height: 651px) {
+      .businessDetail .detailSectionHeading { position: sticky; top: 96px; }
+    }
+    @media (max-width: 1100px), (max-aspect-ratio: 1/1), (max-height: 650px) {
+      .businessDetailStage { padding-bottom: 6svh; }
+      .businessDetailStage + .businessDetailStage { margin-top: -6svh; }
+      .businessDetailStage > :is(.businessDetailSection, .nextBusiness) { animation-name: business-detail-surface-compact; }
+      .businessNextStage { padding-bottom: 0; }
+    }
+  }
+}
+@keyframes business-detail-surface {
+  from { transform: translateY(22svh); }
+  to { transform: translateY(0); }
+}
+@keyframes business-detail-surface-compact {
+  from { transform: translateY(14svh); }
+  to { transform: translateY(0); }
+}

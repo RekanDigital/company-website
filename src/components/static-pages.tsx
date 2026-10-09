@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { CSSProperties, ReactNode } from "react";
+import { Fragment, type CSSProperties, type ReactNode } from "react";
 
 import {
   aboutContent,
@@ -48,9 +48,9 @@ function pointTail(text: string | undefined, marker: string) {
     : text;
 }
 
-function AboutWordStatement({ text, marker }: { text: string; marker: string }) {
+function WordStatement({ text, marker, className = "aboutStatementWord" }: { text: string; marker?: string; className?: string }) {
   const words = text.split(" ");
-  const offset = text.indexOf(marker);
+  const offset = marker ? text.indexOf(marker) : -1;
   const pointWord = offset < 0 ? words.length : text.slice(0, offset).trim().split(" ").length;
 
   return (
@@ -58,7 +58,7 @@ function AboutWordStatement({ text, marker }: { text: string; marker: string }) 
       {words.map((word, index) => (
         <span key={index}>
           <span
-            className={`aboutStatementWord${index >= pointWord ? " dots" : ""}`}
+            className={`${className}${index >= pointWord ? " dots" : ""}`}
             style={{ "--word-start": `${4 + index / words.length * 92}%`, "--word-end": `${4 + (index + 1) / words.length * 92}%` } as CSSProperties}
           >{word}</span>{" "}
         </span>
@@ -94,7 +94,7 @@ export function AboutPageBody({ locale }: { locale: Locale }) {
     <div className="staticPage aboutPage">
       <AboutSlideshow locale={locale} paragraphs={storyParagraphs.map((node) => node.text)} />
       <AboutReadingSection className="staticStory">
-        {storyStatement ? <AboutWordStatement text={storyStatement} marker={locale === "en" ? "RekanMU continues" : "RekanMU terus"} /> : null}
+        {storyStatement ? <WordStatement text={storyStatement} marker={locale === "en" ? "RekanMU continues" : "RekanMU terus"} /> : null}
       </AboutReadingSection>
       <AboutReadingSection className="atGlance">
         <div className="atGlanceIntro">{glance.intro.map((text) => <p className="lead" key={text}>{text}</p>)}</div>
@@ -114,7 +114,7 @@ export function AboutPageBody({ locale }: { locale: Locale }) {
       <AboutReadingSection className="visionMission">
         {visionItem ? (
           <div className="aboutVisionCurtain">
-            <AboutWordStatement text={visionText} marker={locale === "en" ? "based on Indonesia’s resources" : "berbasis sumber daya Indonesia"} />
+            <WordStatement text={visionText} marker={locale === "en" ? "based on Indonesia’s resources" : "berbasis sumber daya Indonesia"} />
           </div>
         ) : null}
       </AboutReadingSection>
@@ -284,30 +284,47 @@ export function BusinessDetailBody({ business, locale }: { business: BusinessPag
   const next = businessPages[(index + 1) % businessPages.length];
   return (
     <div className="staticPage businessDetail">
-      <section className="sec gut overviewSection"><Statement>{statement}</Statement>{overviewSupport.length ? <Paragraphs nodes={overviewSupport} /> : null}</section>
+      <BusinessReadingSection className="overviewSection"><WordStatement text={statement} className="detailStatementWord" />{overviewSupport.length ? <Paragraphs nodes={overviewSupport} /> : null}</BusinessReadingSection>
       {detailSections.map((section, sectionIndex) => {
         const content = contentItems(section.nodes);
+        const statementIntro = business.slug === "general-trading-supply-chain" && section.name === "How We Support the Supply Chain";
+        const introAsLead = content.intro.length > 0 && content.items.length > 0 && !statementIntro;
         return (
-          <section className={`sec gut detailSection${sectionIndex ? " detailContinuation" : ""}`} key={section.name}>
-            {sectionIndex === 0 ? <div className="detailSectionHeading">
-              <h2 className="disp2">{capabilityParts[0]}<PointType>{capabilityParts[1]}</PointType></h2>
-            </div> : null}
-            {content.intro.length ? content.items.length ? <div className="staticCopy">{content.intro.map((text) => <p className="lead" key={text}>{text}</p>)}</div> : content.intro.map((text) => <div className="detailStatement" key={text}><Statement>{text}</Statement></div>) : null}
-            {content.items.length ? <div className="detailGrid">{content.items.map((item) => <article key={item.title}><h3 className="h3">{item.title}</h3>{item.paragraphs.map((text) => <p className="body" key={text}>{text}</p>)}</article>)}</div> : null}
-            {!inquiry && sectionIndex === detailSections.length - 1 ? <BusinessDetailActions locale={locale} /> : null}
-          </section>
+          <Fragment key={section.name}>
+            {statementIntro && content.intro.length ? <BusinessReadingSection className="detailSection detailContinuation detailStatementSection">
+              {content.intro.map((text) => <div className="detailStatement" key={text}><WordStatement text={text} className="detailStatementWord" /></div>)}
+            </BusinessReadingSection> : null}
+            <BusinessReadingSection className={`detailSection${sectionIndex ? " detailContinuation" : ""}${content.items.length ? " detailListSection" : " detailStatementSection"}${!inquiry && sectionIndex === detailSections.length - 1 ? " detailActionSection" : ""}`}>
+              {sectionIndex === 0 ? <div className="detailSectionHeading">
+                <h2 className="disp2">{capabilityParts[0]}<PointType>{capabilityParts[1]}</PointType></h2>
+              </div> : null}
+              <div className="detailSectionContent">
+                {introAsLead
+                  ? <div className="staticCopy">{content.intro.map((text) => <p className="lead" key={text}>{text}</p>)}</div>
+                  : !statementIntro ? content.intro.map((text) => <div className="detailStatement" key={text}><WordStatement text={text} className="detailStatementWord" /></div>) : null}
+                {content.items.length ? <div className="detailGrid">{content.items.map((item) => <article key={item.title}><h3 className="h3">{item.title}</h3>{item.paragraphs.map((text) => <p className="body" key={text}>{text}</p>)}</article>)}</div> : null}
+                {!inquiry && sectionIndex === detailSections.length - 1 ? <BusinessDetailActions locale={locale} /> : null}
+              </div>
+            </BusinessReadingSection>
+          </Fragment>
         );
       })}
-      {inquiry ? <section className="sec gut detailInquiry">
+      {inquiry ? <BusinessReadingSection className="detailInquiry">
         <div><h2 className="disp2">{inquiryParts[0]}<br /><PointType>{inquiryParts[1]}</PointType></h2></div>
         <div>{(inquiryContent?.items[0]?.paragraphs ?? inquiryContent?.intro ?? []).map((text) => <p className="lead" key={text}>{text}</p>)}<BusinessDetailActions locale={locale} /></div>
-      </section> : null}
-      <Link aria-label={`${locale === "en" ? "Next:" : "Berikutnya:"} ${next.name}`} className="nextBusiness gut" href={localizeHref(`/businesses/${next.slug}`, locale)}>
-        <span className="disp2">{locale === "en" ? "Next:" : "Berikutnya:"} {nextNameParts[0]}<br /><PointType>{nextNameParts[1]}</PointType></span>
-        <div className="nextSpecimen"><BusinessesCardViewer locale={locale} name={next.name} slug={next.slug} specimenIndex={next.specimenIndex} /></div>
-      </Link>
+      </BusinessReadingSection> : null}
+      <div className="businessDetailStage businessNextStage">
+        <Link aria-label={`${locale === "en" ? "Next:" : "Berikutnya:"} ${next.name}`} className="nextBusiness gut" href={localizeHref(`/businesses/${next.slug}`, locale)}>
+          <span className="disp2">{locale === "en" ? "Next:" : "Berikutnya:"} {nextNameParts[0]}<br /><PointType>{nextNameParts[1]}</PointType></span>
+          <div className="nextSpecimen"><BusinessesCardViewer locale={locale} name={next.name} slug={next.slug} specimenIndex={next.specimenIndex} /></div>
+        </Link>
+      </div>
     </div>
   );
+}
+
+function BusinessReadingSection({ className, children }: { className: string; children: ReactNode }) {
+  return <div className="businessDetailStage"><section className={`sec gut businessDetailSection ${className}`}>{children}</section></div>;
 }
 
 function splitBusinessName(name: string) {
