@@ -20,6 +20,10 @@ Both development and production servers bind to `127.0.0.1`. The browser checks 
 
 English routes use `/`; Indonesian routes use `/id`. The language switch preserves the current route and contact anchor. Both locales are prerendered with localized document language, title and description.
 
+## Canonical design canvas
+
+The owner-designated prototype runs at **http://127.0.0.1:4100** from **`/home/sigisgood/rekanmu/company-website`**. Use this checkout for current design work. The 3100 commands and historical checks above describe the separate baseline. See [canonical-prototype.md](canonical-prototype.md).
+
 ## Current application behavior
 
 - `FoundationPage` renders approved page bodies. `HomeScene` mounts only on localized Home routes; the Businesses hero and business pages load plain-WebGL point viewers on demand.

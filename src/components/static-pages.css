@@ -943,3 +943,138 @@ main:has(.productsPage) .foundationHeroCopy { margin-top: 32px; }
   from { transform: translateY(80px) scale(0.96); opacity: 0; }
   to { transform: translateY(0) scale(1); opacity: 1; }
 }
+
+/* Businesses unfold as two plates, two plates, then three within the existing groups. */
+.businessesPage,
+.businessesPage > .businessGroup { border: 0; }
+.businessesPage .businessGroup { display: block; }
+.businessReadingStage { display: contents; }
+.businessHeadingWord { display: inline-block; }
+.businessReadingView {
+  display: grid;
+  align-content: start;
+  gap: 24px;
+  min-height: 0;
+  padding-block: 32px;
+}
+.businessesPage .businessGroupHeading {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(24px, 4vw, 56px);
+  align-items: start;
+}
+.businessesPage .businessReadingView .businessGroupHeading h2 { font-size: clamp(36px, min(4.4vw, 7svh), 64px); }
+.businessesPage .businessGroupHeading .lead { font-size: clamp(18px, 1.6vw, 24px); }
+.businessesPage .businessGrid { gap: clamp(24px, 4vw, 56px); align-items: stretch; }
+.businessesPage .plate > div:last-child { margin-top: auto; }
+/* Crop empty render space, retaining the original square canvas and projection. */
+.businessesPage .businessPlateImage {
+  aspect-ratio: var(--point-stage-ratio);
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+.businessesPage .businessPlateImage .businessCardViewer {
+  inset: 0 0 auto;
+  height: auto;
+  aspect-ratio: 1;
+  margin-top: var(--point-stage-offset);
+  -webkit-mask-image: radial-gradient(ellipse 72% 72% at center, #000 46%, transparent 100%);
+  mask-image: radial-gradient(ellipse 72% 72% at center, #000 46%, transparent 100%);
+}
+/* Keep the static sprite inside the trimmed frame before WebGL becomes ready. */
+.businessesPage .businessPlateImage .businessCardViewerFallback {
+  top: calc(0% - var(--point-stage-offset));
+  left: calc((100% - 100% / var(--point-stage-ratio)) / 2);
+  height: calc(100% / var(--point-stage-ratio));
+}
+.businessesPage .businessPlateImage:has([data-business-slug="technology-digitalization"]) { --point-stage-ratio: 1.099; --point-stage-offset: -6%; }
+.businessesPage .businessPlateImage:has([data-business-slug="data-business-intelligence"]) { --point-stage-ratio: 1.613; --point-stage-offset: -27%; }
+.businessesPage .businessPlateImage:has([data-business-slug="general-trading-supply-chain"]) { --point-stage-ratio: 2.778; --point-stage-offset: -32%; }
+.businessesPage .businessPlateImage:has([data-business-slug="fisheries-seaweed-blue-economy"]) { --point-stage-ratio: 2.941; --point-stage-offset: -34%; }
+.businessesPage .businessPlateImage:has([data-business-slug="health-bioscience"]) { --point-stage-ratio: 2.439; --point-stage-offset: -36%; }
+.businessesPage .businessPlateImage:has([data-business-slug="agriculture-green-economy"]) { --point-stage-ratio: 1.639; --point-stage-offset: -26%; }
+.businessesPage .businessPlateImage:has([data-business-slug="food-beverage"]) { --point-stage-ratio: 1.754; --point-stage-offset: -27%; }
+@supports (grid-template-rows: subgrid) {
+  .businessesPage .businessGrid { grid-template-rows: repeat(4, auto); row-gap: 12px; }
+  .businessesPage .plate { display: grid; grid-row: span 4; grid-template-rows: subgrid; }
+  .businessesPage .businessPlateImage { align-self: end; }
+}
+.businessesPage .threeBusinessGrid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.businessesPage .plate { gap: 12px; }
+.businessesPage .plate h3 { font-size: clamp(24px, 2vw, 30px); }
+main:has(.businessesPage) > .businessOpening {
+  border: 0;
+  grid-template-columns: minmax(0, 1fr);
+  min-height: 0;
+  padding-block: 32px;
+  align-content: center;
+  view-timeline-name: --business-opening;
+}
+main:has(.businessesPage) > .businessOpening p {
+  grid-column: auto;
+  max-width: 28em;
+  font-size: clamp(24px, 3vw, 40px);
+}
+
+@media (max-width: 1100px), (max-aspect-ratio: 1/1), (max-height: 650px) {
+  .businessesPage .businessGroupHeading { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .businessesPage :is(.twoBusinessGrid, .threeBusinessGrid) { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .businessesPage .businessReadingView .businessGroupHeading h2 { font-size: clamp(32px, 5vw, 48px); }
+  .businessesPage .plate { gap: 10px; }
+  .businessesPage .plate h3 { font-size: clamp(24px, 3vw, 30px); }
+  .businessesPage .businessGrid .plate { margin-top: 0; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) and (animation-range: entry 0% entry 100%) {
+    .businessReadingStage {
+      display: block;
+      position: relative;
+      padding-bottom: 12svh;
+      view-timeline-name: --business-view;
+    }
+    .businessReadingStage + .businessReadingStage,
+    .businessesPage .businessGroup + .businessGroup { margin-top: -12svh; }
+    .businessReadingView {
+      position: relative;
+      background: var(--ground);
+      animation: business-view-rise cubic-bezier(0.4, 0, 0.2, 1) both;
+      animation-timeline: --business-view;
+      animation-range: entry 0% entry 100%;
+    }
+    .businessHeadingWord {
+      animation: about-statement-word cubic-bezier(0.4, 0, 0.2, 1) both;
+      animation-timeline: --business-view;
+      animation-range: entry var(--word-start) entry var(--word-end);
+    }
+    .businessesPage .plate {
+      animation: business-plate-rise cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation-timeline: --business-view;
+      animation-range: entry 8% entry 82%;
+    }
+    .businessesPage .plate:nth-child(2) { animation-range: entry 16% entry 90%; }
+    .businessesPage .plate:nth-child(3) { animation-range: entry 24% entry 98%; }
+    main:has(.businessesPage) > .businessOpening p {
+      animation: business-plate-rise cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation-timeline: --business-opening;
+      animation-range: entry 0% entry 100%;
+    }
+    @media (max-width: 1100px), (max-aspect-ratio: 1/1), (max-height: 650px) {
+      .businessReadingStage { padding-bottom: 6svh; }
+      .businessReadingStage + .businessReadingStage,
+      .businessesPage .businessGroup + .businessGroup { margin-top: -6svh; }
+      .businessReadingView { position: relative; top: auto; }
+      .businessesPage .plate {
+        animation-timeline: view();
+        animation-range: entry 0% entry 100%;
+      }
+    }
+  }
+}
+@keyframes business-view-rise {
+  from { transform: translateY(24svh); }
+  to { transform: translateY(0); }
+}
+@keyframes business-plate-rise {
+  from { transform: translateY(72px); }
+  to { transform: translateY(0); }
+}

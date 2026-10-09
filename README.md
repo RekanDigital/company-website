@@ -2,6 +2,12 @@
 
 Official public company-profile website for **PT Rekan Makmur Utama (RekanMU)**.
 
+## Canonical prototype
+
+Owner designated **http://127.0.0.1:4100** as the canonical RekanMU website prototype on 9 October 2026. Its source is **`/home/sigisgood/rekanmu/company-website`**, on the local `main` branch. Use that checkout for subsequent design and motion work; port 3100 remains a separate baseline.
+
+See [prototype authority and operation](docs/canonical-prototype.md).
+
 ---
 
 ## 1. Project Overview & Purpose

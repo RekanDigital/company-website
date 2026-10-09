@@ -219,24 +219,40 @@ const businessHeadingParts: Record<Locale, Record<string, readonly [string, stri
 export function BusinessesPageBody({ locale }: { locale: Locale }) {
   const groups = businessesContent[locale].filter((section) => section.name !== "Hero" && section.name !== "Contact / Business Inquiry");
   return (
-    <div className="staticPage">
+    <div className="staticPage businessesPage">
       {groups.map((group) => {
         const content = contentItems(group.nodes);
         const [displayHeading, ...items] = content.items;
         const businessItems = items.filter((item) => businessPages.some((business) => business.name === item.title));
         const headingParts = displayHeading ? businessHeadingParts[locale][displayHeading.title] : undefined;
+        const headingWords = (headingParts?.join(" ") ?? displayHeading?.title ?? "").split(" ");
+        const pointWord = headingParts ? headingParts[0].split(" ").length : headingWords.length;
+        const rows = businessItems.length === 2 ? [businessItems] : [businessItems.slice(0, 2), businessItems.slice(2)];
         return (
-          <section className="sec gut businessGroup" key={group.name}>
-            <div className="businessGroupHeading">
-              <h2 className="disp2">{headingParts ? <>{headingParts[0]}<br /><PointType>{headingParts[1]}</PointType></> : displayHeading?.title}</h2>
-              {displayHeading?.paragraphs.map((text) => <p className="lead" key={text}>{text}</p>)}
-            </div>
-            <div className={`businessGrid ${businessItems.length === 2 ? "twoBusinessGrid" : "fiveBusinessGrid"}`}>
-              {businessItems.map((item) => {
-                const business = businessPages.find((candidate) => candidate.name === item.title)!;
-                return <BusinessPlate businessSlug={business.slug} ctaLabel={locale === "en" ? "View business" : "Lihat bisnis"} description={item.paragraphs.join(" ")} href={localizeHref(`/businesses/${business.slug}`, locale)} imageAlt="" key={item.title} locale={locale} name={item.title} specimenIndex={business.specimenIndex} />;
-              })}
-            </div>
+          <section className="businessGroup" key={group.name} aria-label={displayHeading?.title}>
+            {rows.map((row, rowIndex) => (
+              <div className="businessReadingStage" key={rowIndex}>
+                <div className="businessReadingView gut">
+                  {rowIndex === 0 ? <div className="businessGroupHeading">
+                    <h2 className="disp2">
+                      {headingWords.map((word, index) => (
+                        <span key={index}><span
+                          className={`businessHeadingWord${index >= pointWord ? " dots" : ""}`}
+                          style={{ "--word-start": `${18 + index / headingWords.length * 60}%`, "--word-end": `${18 + (index + 1) / headingWords.length * 60}%` } as CSSProperties}
+                        >{word}</span>{" "}</span>
+                      ))}
+                    </h2>
+                    {displayHeading?.paragraphs.map((text) => <p className="lead" key={text}>{text}</p>)}
+                  </div> : null}
+                  <div className={`businessGrid ${row.length === 2 ? "twoBusinessGrid" : "threeBusinessGrid"}`}>
+                    {row.map((item) => {
+                      const business = businessPages.find((candidate) => candidate.name === item.title)!;
+                      return <BusinessPlate businessSlug={business.slug} ctaLabel={locale === "en" ? "View business" : "Lihat bisnis"} description={item.paragraphs.join(" ")} href={localizeHref(`/businesses/${business.slug}`, locale)} imageAlt="" key={item.title} locale={locale} name={item.title} specimenIndex={business.specimenIndex} />;
+                    })}
+                  </div>
+                </div>
+              </div>
+            ))}
           </section>
         );
       })}
