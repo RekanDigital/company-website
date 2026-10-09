@@ -4,17 +4,17 @@ import { localizeHref, type Locale } from "@/content/site";
 import { ButtonLink, PointType } from "./ui";
 import "./home-catalogue.css";
 
-import edBusinessConsulting from "../../resources/assets/partners-logo-transparent/partners-ed-business-consulting.png";
-import gerakanPembaru from "../../resources/assets/partners-logo-transparent/partners-gerakan-pembaru.png";
-import iMercy from "../../resources/assets/partners-logo-transparent/partners-imercy.png";
-import lenteraAlamNusantara from "../../resources/assets/partners-logo-transparent/partners-lentera-alam-nusantara.png";
-import markasWalet from "../../resources/assets/partners-logo-transparent/partners-markas-walet.png";
-import petambakNusantara from "../../resources/assets/partners-logo-transparent/partners-petambak-nusantara.png";
-import rendangAmbo from "../../resources/assets/partners-logo-transparent/partners-rendang-ambo.png";
-import sabarIkhlasSyukur from "../../resources/assets/partners-logo-transparent/partners-sabar-ikhlas-sukur.png";
-import sygmaDental from "../../resources/assets/partners-logo-transparent/partners-sygma-dental.png";
-import triasSpunindoIndustri from "../../resources/assets/partners-logo-transparent/partners-trias-spunindo-industri.png";
-import vistaTeknik from "../../resources/assets/partners-logo-transparent/partners-vista-teknik.png";
+import edBusinessConsulting from "@/assets/partners/partners-ed-business-consulting.png";
+import gerakanPembaru from "@/assets/partners/partners-gerakan-pembaru.png";
+import iMercy from "@/assets/partners/partners-imercy.png";
+import lenteraAlamNusantara from "@/assets/partners/partners-lentera-alam-nusantara.png";
+import markasWalet from "@/assets/partners/partners-markas-walet.png";
+import petambakNusantara from "@/assets/partners/partners-petambak-nusantara.png";
+import rendangAmbo from "@/assets/partners/partners-rendang-ambo.png";
+import sabarIkhlasSyukur from "@/assets/partners/partners-sabar-ikhlas-sukur.png";
+import sygmaDental from "@/assets/partners/partners-sygma-dental.png";
+import triasSpunindoIndustri from "@/assets/partners/partners-trias-spunindo-industri.png";
+import vistaTeknik from "@/assets/partners/partners-vista-teknik.png";
 
 type ProductStream = { name: string; description: string; count: number };
 type HomeCopy = {
