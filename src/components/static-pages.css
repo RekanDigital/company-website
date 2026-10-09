@@ -719,29 +719,76 @@
   }
 }
 
-.aboutVisionCurtain,
-.aboutValueStage { display: contents; }
+/* Untransformed stages coordinate the moving section surfaces and their content. */
+.aboutReadingStage { display: contents; }
+.aboutVisionCurtain { display: contents; }
 .aboutStatementWord { display: inline-block; }
+.aboutPage .staticSection {
+  min-height: calc(100svh - 64px);
+  padding-block: clamp(28px, 4svh, 48px);
+  gap: clamp(24px, 3svh, 36px);
+  align-content: center;
+  border: 0;
+}
+.aboutPage :is(.missionList li, .valueItem, .corporateGrid > div) { border: 0; }
+.aboutPage .valueGrid { gap: clamp(20px, 3svh, 32px); }
+.aboutPage .valueItem {
+  padding: 0;
+  align-items: center;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+.aboutPage .valueItem h3 { font-size: clamp(36px, 4.5vw, 64px); }
+.aboutPage .missionList li { padding-block: 10px; }
+.aboutPage .corporateGrid > div { padding-block: 10px; }
+.aboutPage .figureGrid .num { font-size: clamp(96px, 17vw, 26svh); }
+.aboutPage .figureGrid > article:nth-child(2) { margin-top: clamp(32px, 5svh, 56px); }
+main:has(.aboutPage) > .foundationHero {
+  min-height: calc(100svh - 64px);
+  display: grid;
+  align-content: center;
+  padding-block: clamp(28px, 4svh, 48px);
+}
+main:has(.aboutPage) .foundationHeroCopy { margin-top: 32px; }
 
-@media (min-width: 821px) and (max-width: 1100px) {
+@media (max-width: 1100px), (max-aspect-ratio: 1/1) {
   .aboutPage :is(.missionBlock, .corporateSection, .valueItem) {
     grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
   }
-  .aboutPage :is(.missionBlock h2, .corporateSection h2, .valueItem h3) {
-    font-size: clamp(36px, 5.5vw, 60px);
-  }
-  .aboutPage .figureGrid .num { font-size: 14vw; }
-}
-@media (min-width: 821px) and (max-aspect-ratio: 1/1) {
-  .aboutPage .figureGrid { grid-template-columns: minmax(0, 1fr); }
+  .aboutPage :is(.missionBlock h2, .corporateSection h2) { font-size: clamp(36px, 5.5vw, 60px); }
+  .aboutPage .figureGrid { grid-template-columns: minmax(0, 1fr); gap: 24px; }
   .aboutPage .figureGrid > article:nth-child(2) { margin-top: 0; }
-  .aboutPage .corporateGrid > div { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .aboutPage .figureGrid .num { font-size: clamp(88px, 14vw, 140px); }
+  .aboutPage .corporateGrid > div { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  .aboutPage .valueItem { gap: 8px; }
+  .aboutPage .valueItem h3 { font-size: clamp(32px, 5vw, 48px); }
 }
-
 
 @media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) and (animation-range: entry 0% entry 100%) {
-    .aboutPage .staticStory .statement { view-timeline-name: --about-statement; }
+  @supports (animation-timeline: view()) and (animation-range: cover 0% cover 100%) {
+    .aboutReadingStage {
+      display: block;
+      position: relative;
+      padding-bottom: 16svh;
+      view-timeline-name: --about-section;
+    }
+    .aboutStoryScene + .aboutReadingStage { margin-top: -28svh; }
+    .aboutReadingStage + .aboutReadingStage { margin-top: -16svh; }
+    .aboutReadingStage > .staticSection {
+      position: sticky;
+      top: 64px;
+      background: var(--ground);
+      animation: about-section-overlap cubic-bezier(0.4, 0, 0.2, 1) both;
+      animation-timeline: --about-section;
+      animation-range: entry 0% entry 100%;
+    }
+    .aboutReadingStage > :is(.staticStory, .visionMission) {
+      position: relative;
+      top: auto;
+      animation: none;
+    }
+    .staticStory .statement { view-timeline-name: --about-statement; }
+    .visionMission { view-timeline-name: --about-vision; }
     .aboutStatementWord {
       animation: about-statement-word cubic-bezier(0.4, 0, 0.2, 1) both;
       animation-range: entry var(--word-start) entry var(--word-end);
@@ -750,128 +797,44 @@
       animation-timeline: --about-statement;
       animation-range: cover calc(var(--word-start) / 2) cover calc(var(--word-end) / 2);
     }
-
-    .aboutPage .figureGrid { view-timeline-name: --about-figures; }
-    .aboutPage .figureGrid > article {
-      animation: about-surface-rise linear both;
-      animation-timeline: --about-figures;
-      animation-range: entry 0% cover 30%;
+    .visionMission .aboutStatementWord { animation-timeline: --about-vision; }
+    .aboutPage :is(.figureGrid > article, .missionList li, .valueItem, .corporateGrid > div) {
+      animation: about-section-content cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation-timeline: --about-section;
+      animation-range: entry 12% entry 88%;
     }
-    .aboutPage .figureGrid > article:nth-child(2) { animation-range: entry 10% cover 38%; }
-    .aboutPage .figureGrid > article:nth-child(3) { animation-range: entry 20% cover 46%; }
-    .aboutPage .figureGrid .figure { view-timeline-name: --about-figure; }
-    .aboutPage .figureGrid :is(.h3, .body) {
-      animation: about-row-reveal linear both;
-      animation-timeline: --about-figure;
-      animation-range: entry 20% cover 40%;
-    }
-    .aboutPage .figureGrid .body { animation-range: entry 30% cover 46%; }
-
-    .aboutPage .aboutVisionCurtain {
-      display: grid;
-      align-items: start;
-      position: relative;
-      isolation: isolate;
-      min-height: 110svh;
-      padding-block: 8svh;
-      view-timeline-name: --about-vision;
-    }
-    .aboutVisionCurtain .statement {
-      position: sticky;
-      top: 104px;
-      align-self: start;
-      max-width: none;
-    }
-    .aboutVisionCurtain .aboutStatementWord { animation-timeline: --about-vision; }
-    .aboutPage .missionBlock h2 {
-      animation: about-row-reveal linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 100%;
-    }
-    .aboutPage .missionList li {
-      animation: about-row-reveal linear both;
-      animation-timeline: view();
-      animation-range: entry 0% cover 28%;
-    }
-
-    .aboutPage .valueGrid { display: block; }
-    .aboutPage .aboutValueStage {
-      display: block;
-      position: relative;
-      min-height: 85svh;
-      view-timeline-name: --about-value;
-    }
-    .aboutValueStage + .aboutValueStage { margin-top: -20svh; }
-    .aboutPage .aboutValueStage .valueItem {
-      position: sticky;
-      top: 96px;
-      min-height: 50svh;
-      align-items: center;
-      padding-block: 6svh;
-      background: var(--ground);
-      border: 0;
-      animation: about-value-sheet linear both;
-      animation-timeline: --about-value;
-      animation-range: entry 0% cover 30%;
-    }
-    .aboutValueStage .valueItem h3 {
-      animation: about-row-reveal linear both;
-      animation-timeline: --about-value;
-      animation-range: entry 0% cover 28%;
-    }
-    .aboutValueStage .valueItem p {
-      animation: about-row-reveal linear both;
-      animation-timeline: --about-value;
-      animation-range: entry 20% cover 40%;
-    }
-
-    .aboutPage .corporateSection h2 {
-      animation: about-row-reveal linear both;
-      animation-timeline: view();
-      animation-range: entry 0% cover 25%;
-    }
-    .aboutPage .corporateGrid > div { view-timeline-name: --about-legal-row; }
-    .aboutPage .corporateGrid :is(dt, dd) {
-      --about-reveal-distance: 24px;
-      animation: about-row-reveal linear both;
-      animation-timeline: --about-legal-row;
-      animation-range: entry 0% cover 25%;
-    }
-    .aboutPage .corporateGrid dd { animation-range: entry 12% cover 30%; }
-
+    .aboutPage .figureGrid > article:nth-child(2) { animation-range: entry 18% entry 92%; }
+    .aboutPage .figureGrid > article:nth-child(3) { animation-range: entry 24% entry 96%; }
+    .aboutPage .valueItem:nth-child(2) { animation-range: entry 18% entry 88%; }
+    .aboutPage .valueItem:nth-child(3) { animation-range: entry 24% entry 90%; }
+    .aboutPage .valueItem:nth-child(4) { animation-range: entry 30% entry 94%; }
+    .aboutPage .valueItem:nth-child(5) { animation-range: entry 36% entry 98%; }
     @media (max-width: 1100px), (max-aspect-ratio: 1/1) {
-      .aboutPage .figureGrid > article {
-        animation-timeline: view();
-        animation-range: entry 0% cover 32%;
+      .aboutReadingStage { padding-bottom: 10svh; }
+      .aboutReadingStage + .aboutReadingStage { margin-top: -10svh; }
+      .aboutReadingStage > .staticSection:not(.staticStory):not(.visionMission) {
+        position: relative;
+        top: auto;
+        animation-name: about-section-overlap-compact;
       }
-      .aboutPage .aboutVisionCurtain { min-height: auto; padding-block: 5svh; }
-      .aboutVisionCurtain .statement { position: static; }
-      .aboutPage .aboutValueStage { min-height: clamp(300px, 55svh, 560px); }
-      .aboutValueStage + .aboutValueStage { margin-top: -8svh; }
-      .aboutPage .aboutValueStage .valueItem {
-        top: 80px;
-        min-height: clamp(260px, 42svh, 430px);
-        grid-template-columns: minmax(0, 1fr);
-        align-content: center;
-        gap: 28px;
+      .aboutPage :is(.figureGrid > article, .valueItem, .corporateGrid > div) {
+        animation: about-section-content cubic-bezier(0.22, 1, 0.36, 1) both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 100%;
       }
     }
   }
 }
 
-@keyframes about-surface-rise {
-  from { transform: translateY(140px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-@keyframes about-row-reveal {
-  from { transform: translateY(var(--about-reveal-distance, 64px)); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-@keyframes about-detail-appear {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-@keyframes about-value-sheet {
-  from { transform: translateY(22svh); }
+@keyframes about-section-overlap {
+  from { transform: translateY(28svh); }
   to { transform: translateY(0); }
+}
+@keyframes about-section-overlap-compact {
+  from { transform: translateY(18svh); }
+  to { transform: translateY(0); }
+}
+@keyframes about-section-content {
+  from { transform: translateY(80px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }

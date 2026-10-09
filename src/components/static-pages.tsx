@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
 import {
   aboutContent,
@@ -67,6 +67,14 @@ function AboutWordStatement({ text, marker }: { text: string; marker: string }) 
   );
 }
 
+function AboutReadingSection({ className, children }: { className: string; children: ReactNode }) {
+  return (
+    <div className="aboutReadingStage">
+      <section className={`sec gut staticSection ${className}`}>{children}</section>
+    </div>
+  );
+}
+
 export function AboutPageBody({ locale }: { locale: Locale }) {
   const sections = aboutContent[locale].filter((section) => section.nodes.length);
   const byName = (name: string) => sections.find((section) => section.name === name)!;
@@ -82,14 +90,13 @@ export function AboutPageBody({ locale }: { locale: Locale }) {
   const missionItem = vision.items[1];
   const visionText = visionItem?.paragraphs[0] ?? "";
 
-
   return (
     <div className="staticPage aboutPage">
       <AboutSlideshow locale={locale} paragraphs={storyParagraphs.map((node) => node.text)} />
-      <section className="sec gut staticSection staticStory">
+      <AboutReadingSection className="staticStory">
         {storyStatement ? <AboutWordStatement text={storyStatement} marker={locale === "en" ? "RekanMU continues" : "RekanMU terus"} /> : null}
-      </section>
-      <section className="sec gut staticSection atGlance">
+      </AboutReadingSection>
+      <AboutReadingSection className="atGlance">
         <div className="atGlanceIntro">{glance.intro.map((text) => <p className="lead" key={text}>{text}</p>)}</div>
         <div className="figureGrid">
           {glance.items.map((item, index) => (
@@ -103,36 +110,36 @@ export function AboutPageBody({ locale }: { locale: Locale }) {
             </article>
           ))}
         </div>
-      </section>
-      <section className="sec gut staticSection visionMission">
+      </AboutReadingSection>
+      <AboutReadingSection className="visionMission">
         {visionItem ? (
           <div className="aboutVisionCurtain">
             <AboutWordStatement text={visionText} marker={locale === "en" ? "based on Indonesia’s resources" : "berbasis sumber daya Indonesia"} />
           </div>
         ) : null}
+      </AboutReadingSection>
+      <AboutReadingSection className="aboutMission">
         <div className="missionBlock">
           <h2 className="disp2">{missionItem?.title}</h2>
           <ul className="missionList body">{missionItem?.paragraphs.map((text) => <li key={text}>{text}</li>)}</ul>
         </div>
-      </section>
-      <section className="sec gut staticSection valueSection">
+      </AboutReadingSection>
+      <AboutReadingSection className="valueSection">
         <div className="valueGrid">
           {values.items.map((item, index) => (
-            <div className="aboutValueStage" key={item.title}>
-              <article className="valueItem">
-                <h3 className="disp2">{index === 1 || index === 3 ? <PointType>{item.title}</PointType> : item.title}</h3>
-                <p className="body">{item.paragraphs[0]}</p>
-              </article>
-            </div>
+            <article className="valueItem" key={item.title}>
+              <h3 className="disp2">{index === 1 || index === 3 ? <PointType>{item.title}</PointType> : item.title}</h3>
+              <p className="body">{item.paragraphs[0]}</p>
+            </article>
           ))}
         </div>
-      </section>
-      <section className="sec gut staticSection corporateSection">
+      </AboutReadingSection>
+      <AboutReadingSection className="corporateSection">
         <h2 className="disp2">{locale === "en" ? "Corporate" : "Informasi"}<br /><PointType>{locale === "en" ? "Information" : "Perusahaan"}</PointType></h2>
         <dl className="corporateGrid">
           {corporate.items.map((item) => <div key={item.title}><dt className="mono">{item.title}</dt><dd className="body">{item.paragraphs.join(" ")}</dd></div>)}
         </dl>
-      </section>
+      </AboutReadingSection>
     </div>
   );
 }
