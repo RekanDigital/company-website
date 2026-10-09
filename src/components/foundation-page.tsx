@@ -164,7 +164,7 @@ export function FoundationPage({
   showComponents?: boolean;
 }) {
   const hero = pageHeroes[path as PagePath][locale];
-  const hasClosingCard = path === "/" || path === "/about" || path === "/businesses";
+  const hasClosingCard = path === "/" || path === "/about" || path === "/businesses" || path === "/products-services";
   const businessesOverview = path === "/businesses";
   const business = businessPages.find((item) => path === `/businesses/${item.slug}`);
 

@@ -838,3 +838,108 @@ main:has(.aboutPage) .foundationHeroCopy { margin-top: 32px; }
   from { transform: translateY(80px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
+
+/* Products: one page scroll, one sticky introduction per stream. */
+.productsPage,
+.productsPage > section,
+.productsPage :is(.catalogueItem, .catalogueGroup) { border: 0; }
+.productsPage .streamBar { padding-block: 20px; }
+.productsPage .catalogueSection {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(28px, 4vw, 64px);
+  min-height: calc(100svh - 64px);
+  padding-block: clamp(28px, 4svh, 48px);
+  view-timeline-name: --product-stream;
+}
+.productsPage .catalogueHeading {
+  position: sticky;
+  top: 96px;
+  align-self: start;
+}
+.productsPage .catalogueHeading h2 {
+  font-size: clamp(48px, min(6.4vw, 9.2svh), 88px);
+  line-height: 1.02;
+  margin-bottom: 20px;
+}
+.productsPage .catalogueIntro p { margin: 0; }
+.productsPage .catalogueIntro { display: grid; gap: 12px; }
+.productsPage .catalogueItem {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  padding-block: 14px;
+}
+.productsPage .catalogueItem h3 { font-size: clamp(24px, 2.2vw, 32px); }
+.productsPage .catalogueItem .body { line-height: 1.5; }
+.productsPage .catalogueItem > div { display: grid; gap: 8px; }
+.productsPage .catalogueGroup { padding-block: 22px 8px; }
+.productsPage .catalogueGroup:first-child { padding-top: 0; }
+.productsPage .inquirySection {
+  min-height: calc(100svh - 64px);
+  align-content: center;
+  padding-block: clamp(28px, 4svh, 48px);
+  gap: clamp(24px, 4vw, 64px);
+  view-timeline-name: --product-inquiry;
+}
+main:has(.productsPage) > .foundationHero {
+  min-height: calc(100svh - 64px);
+  display: grid;
+  align-content: center;
+  padding-block: clamp(28px, 4svh, 48px);
+}
+main:has(.productsPage) .foundationHeroCopy { margin-top: 32px; }
+
+@media (max-width: 1100px), (max-aspect-ratio: 1/1), (max-height: 650px) {
+  .productsPage .catalogueSection { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .productsPage .catalogueHeading { display: contents; }
+  .productsPage .catalogueHeading h2 {
+    position: sticky;
+    top: 64px;
+    z-index: 2;
+    margin: 0;
+    padding-block: 12px;
+    background: var(--ground);
+    font-size: clamp(28px, 4vw, 38px);
+  }
+  .productsPage .catalogueHeading h2 br { display: none; }
+  .productsPage .catalogueIntro { max-width: 40em; }
+  .productsPage .catalogueIntro .lead { font-size: clamp(18px, 2.2vw, 24px); }
+  .productsPage .catalogueItem { padding-block: 12px; }
+  .productsPage .inquirySection { grid-template-columns: minmax(0, 1fr); }
+  .productsPage .inquirySection h2 { font-size: clamp(36px, 6vw, 64px); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) and (animation-range: entry 0% entry 100%) {
+    .productsPage .catalogueHeading {
+      animation: product-stream-settle cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation-timeline: --product-stream;
+      animation-range: entry 0% entry 90%;
+    }
+    .productsPage :is(.catalogueItem, .catalogueGroup) {
+      animation: product-row-rise cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 100%;
+    }
+    .productsPage .inquirySection > * {
+      animation: product-stream-settle cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation-timeline: --product-inquiry;
+      animation-range: entry 0% entry 90%;
+    }
+    @media (max-width: 1100px), (max-aspect-ratio: 1/1), (max-height: 650px) {
+      .productsPage .catalogueHeading { animation: none; }
+      .productsPage .catalogueHeading h2 {
+        animation: product-stream-settle cubic-bezier(0.22, 1, 0.36, 1) both;
+        animation-timeline: --product-stream;
+        animation-range: entry 0% entry 80%;
+      }
+    }
+  }
+}
+@keyframes product-stream-settle {
+  from { transform: translateY(18svh); }
+  to { transform: translateY(0); }
+}
+@keyframes product-row-rise {
+  from { transform: translateY(80px) scale(0.96); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}

@@ -160,7 +160,7 @@ export function ProductsPageBody({ locale }: { locale: Locale }) {
   const streams = sections.filter((section) => section !== inquiry);
   const streamRows = [streams.slice(0, 3), streams.slice(3)];
   return (
-    <div className="staticPage">
+    <div className="staticPage productsPage">
       <nav aria-label={locale === "en" ? "Product and service streams" : "Alur produk dan layanan"} className="streamBar gut">
         {streamRows.map((row, rowIndex) => (
           <div className="streamBarRow" key={rowIndex}>
@@ -177,8 +177,8 @@ export function ProductsPageBody({ locale }: { locale: Locale }) {
         return (
           <section className="sec gut catalogueSection" id={productStreamIds[sectionIndex]} key={section.name}>
             <div className="catalogueHeading">
-              <h2 className="disp2">{solid}<br /><PointType>{point}</PointType></h2>
-              {content.intro.map((text) => <p className="lead" key={text}>{text}</p>)}
+              <h2 className="disp2">{solid}<br />{" "}<PointType>{point}</PointType></h2>
+              <div className="catalogueIntro">{content.intro.map((text) => <p className="lead" key={text}>{text}</p>)}</div>
             </div>
             <div className="catalogueList">
               {content.items.map((item) => item.paragraphs.length ? (
