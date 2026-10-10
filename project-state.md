@@ -7,7 +7,7 @@
 | Phase status | 100% complete across all 13 tasks ([`9eb8b72`](https://github.com/RekanDigital/company-website/commit/9eb8b72f0c9bd25d6b90ae9cf3b5bd2fb2982a66)). Drive tracker synchronized. |
 | Current sprint | Project Complete — formally accepted and closed by Sigit Dani Perkasa |
 | PM status | All deliverables accepted; Master Drive Project Tracker synchronized (100.0% complete). |
-| Engineering focus | Production operations. Canonical prototype live at `http://127.0.0.1:4100`; Netlify deployment configuration verified (`docs/netlify-hosting.md`). |
+| Engineering focus | Production operations. Live hosted prototype active at [https://rekanmu.netlify.app](https://rekanmu.netlify.app); canonical local design canvas at `http://127.0.0.1:4100`. |
 | Active blockers | None. |
 
 ---

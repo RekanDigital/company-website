@@ -2,11 +2,12 @@
 
 Official public company-profile website for **PT Rekan Makmur Utama (RekanMU)**.
 
-## Canonical prototype
+## Prototype Environments
 
-Owner designated **http://127.0.0.1:4100** as the canonical RekanMU website prototype on 9 October 2026. Its source is **`/home/sigisgood/rekanmu/company-website`**, on the local `main` branch. Use that checkout for subsequent design and motion work; port 3100 remains a separate baseline.
+- **Live Hosted Prototype:** [https://rekanmu.netlify.app](https://rekanmu.netlify.app) (Deployed on Netlify)
+- **Canonical Local Prototype:** `http://127.0.0.1:4100` (Local design canvas; source is `/home/sigisgood/rekanmu/company-website` on `main`)
 
-See [prototype authority and operation](docs/canonical-prototype.md). Hosting preparation for the initial Netlify prototype is documented in [Netlify hosting](docs/netlify-hosting.md).
+See [prototype authority and operation](docs/canonical-prototype.md) and [Netlify hosting](docs/netlify-hosting.md).
 
 ---
 
