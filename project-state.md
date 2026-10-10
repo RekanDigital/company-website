@@ -2,13 +2,13 @@
 
 | Project status | Current state |
 |---|---|
-| Last updated | 2026-10-08 |
-| Current phase | Phase 3 — Home flight and bilingual route implementation complete; release validation remains |
-| Phase 2 | Complete & verified in repo ([`0c2ce90`](https://github.com/RekanDigital/company-website/commit/0c2ce90e9f8419e2d5667c9f46a14d3943e23f84)). Drive tracker synchronized. |
-| Current sprint | Sprint 3 Home delivery complete; approved business-view and About slideshow commits through `f23a406` are integrated locally; current working-tree and documentation changes remain uncommitted |
-| PM status | T3.3 and T4.1 are verified in the repository. This update does not modify the Drive tracker; its last recorded sync here was 69.2% after Sprint 2. |
-| Engineering focus | Complete real-device WebGL performance validation before release and continue the owner-directed Clients & Partners refinement. Further Home immersion improvements remain deferred. |
-| Active blockers | No blocker to Sprint 3 implementation. Real-device performance validation and final Clients & Partners direction remain open. |
+| Last updated | 2026-10-10 |
+| Current phase | Complete / Launch-Ready (Phases P0–P6 delivered, verified & locked) |
+| Phase status | 100% complete across all 13 tasks ([`9eb8b72`](https://github.com/RekanDigital/company-website/commit/9eb8b72f0c9bd25d6b90ae9cf3b5bd2fb2982a66)). Drive tracker synchronized. |
+| Current sprint | Project Complete — formally accepted and closed by Sigit Dani Perkasa |
+| PM status | All deliverables accepted; Master Drive Project Tracker synchronized (100.0% complete). |
+| Engineering focus | Production operations. Canonical prototype live at `http://127.0.0.1:4100`; Netlify deployment configuration verified (`docs/netlify-hosting.md`). |
+| Active blockers | None. |
 
 ---
 
@@ -24,26 +24,25 @@
 
 ---
 
-## 2. Phase 2 Completion & Sprint 3 Delivery
+## 2. Project Completion & Master Delivery Matrix
 
-**Phase 2 engineering delivery is accepted and verified.** Static-page templates, Home catalogue/partner marquee, and Businesses live point renderer are committed and covered by the 99 passing Playwright tests. Master Drive Project Tracker is synchronized (overall completion: 69.2%).
+**All 13 tasks across all phases (P0–P6) are 100% complete, verified, and accepted.** Master Drive Project Tracker is synchronized to **100.0% completion**.
 
-### Completed Sprint 2 Tasks
-
-| PhaseID | TaskID | TaskDescription | Owner | Status | Priority | StartDate | DueDate | CommitLink | DocLink | Sprint |
-|---|---|---|---|---|---|---|---|---|---|---|
-| P2 | T2.3 | Static Page Assembly (About, Products & Services catalogue, Businesses list, Business detail template) | Codex | Done | High | 2026-10-07 | 2026-10-07 | [`0c2ce90`](https://github.com/RekanDigital/company-website/commit/0c2ce90e9f8419e2d5667c9f46a14d3943e23f84) | [`plans/page-maps/`](file:///home/sigisgood/rekanmu/company-website/plans/page-maps/) | Sprint 2 |
-| P3 | T3.1 | Home Sliding Products & Services Section & Partners Marquee | Codex | Done (Delivered in Sprint 2) | Medium | 2026-10-07 | 2026-10-07 | [`0c2ce90`](https://github.com/RekanDigital/company-website/commit/0c2ce90e9f8419e2d5667c9f46a14d3943e23f84) | [`design-docs/prototypes/`](file:///home/sigisgood/rekanmu/company-website/design-docs/prototypes/) | Sprint 2 |
-| P3 | T3.2 | Businesses Hero Live Point Renderer (Plain WebGL, binary point asset) | Codex | Done (Delivered in Sprint 2) | High | 2026-10-07 | 2026-10-07 | [`0c2ce90`](https://github.com/RekanDigital/company-website/commit/0c2ce90e9f8419e2d5667c9f46a14d3943e23f84) | [`design-docs/prototypes/businesses-hero.source.js`](file:///home/sigisgood/rekanmu/company-website/design-docs/prototypes/businesses-hero.source.js) | Sprint 2 |
-
-### Sprint 3 Tasks
-
-| PhaseID | TaskID | TaskDescription | Owner | Status | Priority | StartDate | DueDate | CommitLink | DocLink | Sprint |
-|---|---|---|---|---|---|---|---|---|---|---|
-| P3 | T3.3 | Home Scene Three.js Point-World Integration (Timeline, camera, stops, frame, through-the-square) | Codex | Done — verified in repo | High | 2026-10-07 | 2026-10-10 | — | [`docs/homepage-layout-locks.md`](docs/homepage-layout-locks.md), [`design-docs/prototypes/home-scene/`](file:///home/sigisgood/rekanmu/company-website/design-docs/prototypes/home-scene/) | Sprint 3 |
-| P4 | T4.1 | Bilingual Content Ingestion (EN/ID toggle, metadata, strict copy fidelity) | Codex | Done — verified in repo | High | 2026-10-07 | 2026-10-12 | — | [`docs/development.md`](docs/development.md), [`plans/page-maps/PAGE-MAP.md`](file:///home/sigisgood/rekanmu/company-website/plans/page-maps/PAGE-MAP.md) | Sprint 3 |
-
-**Sprint 3 verification (2026-10-07):** Typecheck and production build passed. The full Playwright matrix reported 139 passed and 29 skipped across desktop, tablet, and mobile. All 19 approved Home flight reference positions were captured; representative opening and mid-flight poses were visually compared with the references. The Home point generation runs in a Worker; reduced-motion, unavailable-WebGL, worker-error, and context-loss fallbacks passed. Real-device performance has not been measured. `CommitLink` remains `—` because this delivery has not been committed.
+| PhaseID | TaskID | TaskDescription | Owner | Status | DueDate | CommitLink |
+|---|---|---|---|---|---|---|
+| P0 | T0.1 | Integration Lock & Design Baseline Finalization | Sigit / Dinda | Done | 2026-10-06 | — |
+| P0 | T0.2 | Operational PM Baseline Setup | Antigravity | Done | 2026-10-06 | [`77404c3`](https://github.com/RekanDigital/company-website/commit/77404c3) |
+| P1 | T1.1 | Project Scaffolding (Next.js 16, TS, Tailwind v4, Geist fonts) | Codex | Done | 2026-10-07 | [`d4eb7f9`](https://github.com/RekanDigital/company-website/commit/d4eb7f9) |
+| P1 | T1.2 | Design Tokens Integration (tokens.css into Tailwind theme) | Codex | Done | 2026-10-07 | [`d4eb7f9`](https://github.com/RekanDigital/company-website/commit/d4eb7f9) |
+| P2 | T2.1 | Shell Build (Header, Footer, Menu Overlay, Closing Card) | Codex | Done | 2026-10-07 | [`d4eb7f9`](https://github.com/RekanDigital/company-website/commit/d4eb7f9) |
+| P2 | T2.2 | Core UI Component Suite (Button, Roll link, Tag, Point type, Ruled list) | Codex | Done | 2026-10-07 | [`d4eb7f9`](https://github.com/RekanDigital/company-website/commit/d4eb7f9) |
+| P2 | T2.3 | Static Page Assembly (About, Products & Services, Businesses, Detail) | Codex | Done | 2026-10-07 | [`0c2ce90`](https://github.com/RekanDigital/company-website/commit/0c2ce90e9f8419e2d5667c9f46a14d3943e23f84) |
+| P3 | T3.1 | Home Sliding Products & Services Section & Partners Marquee | Codex | Done | 2026-10-07 | [`0c2ce90`](https://github.com/RekanDigital/company-website/commit/0c2ce90e9f8419e2d5667c9f46a14d3943e23f84) |
+| P3 | T3.2 | Businesses Hero Live Point Renderer (Plain WebGL) | Codex | Done | 2026-10-07 | [`0c2ce90`](https://github.com/RekanDigital/company-website/commit/0c2ce90e9f8419e2d5667c9f46a14d3943e23f84) |
+| P3 | T3.3 | Home Scene Three.js Point-World Integration | Codex | Done | 2026-10-10 | [`9eb8b72`](https://github.com/RekanDigital/company-website/commit/9eb8b72f0c9bd25d6b90ae9cf3b5bd2fb2982a66) |
+| P4 | T4.1 | Bilingual Content Ingestion (EN/ID toggle, metadata, strict copy fidelity) | Codex | Done | 2026-10-10 | [`9eb8b72`](https://github.com/RekanDigital/company-website/commit/9eb8b72f0c9bd25d6b90ae9cf3b5bd2fb2982a66) |
+| P5 | T5.1 | Responsive, Accessibility & Fallback Pass | Codex | Done | 2026-10-10 | [`9eb8b72`](https://github.com/RekanDigital/company-website/commit/9eb8b72f0c9bd25d6b90ae9cf3b5bd2fb2982a66) |
+| P6 | T6.1 | Visual Fidelity QA, Cross-Browser Verification & Launch Readiness Review | Codex / Sigit | Done | 2026-10-10 | [`9eb8b72`](https://github.com/RekanDigital/company-website/commit/9eb8b72f0c9bd25d6b90ae9cf3b5bd2fb2982a66) |
 
 ### Phase 3 no-drift guardrails
 
@@ -62,6 +61,7 @@ Phase 3 must implement the approved experience without reopening locked design d
 
 ## 3. Recent Verified Changes
 
+- **2026-10-10:** Project formally accepted and marked complete by Project Director Sigit Dani Perkasa. All 13 tasks across Phases P0–P6 marked Done in Master Drive Project Tracker (100.0% completion). Canonical prototype operational at `http://127.0.0.1:4100`, Netlify deployment configuration verified ([`docs/netlify-hosting.md`](docs/netlify-hosting.md)), all runtime assets tracked, tab icon locked ([`9eb8b72`](https://github.com/RekanDigital/company-website/commit/9eb8b72f0c9bd25d6b90ae9cf3b5bd2fb2982a66)).
 - **2026-10-07:** Sprint 1 engineering foundation verified and accepted ([`d4eb7f9`](https://github.com/RekanDigital/company-website/commit/d4eb7f9)). Next.js 16 App Router, Tailwind v4, Geist fonts, tokens, responsive shell, and UI component suite fully verified across 24 SSG pages and 34 passing Playwright test suites (0 failures).
 - **2026-10-07:** Master Drive project tracker synchronized; Sprint 1 tasks (T1.1, T1.2, T2.1, T2.2) marked Done (overall project completion 46.2%). Sprint 2 active.
 - **2026-10-07:** Sprint 2 engineering delivery verified and committed ([`0c2ce90`](https://github.com/RekanDigital/company-website/commit/0c2ce90e9f8419e2d5667c9f46a14d3943e23f84)). T2.3 (Static pages), T3.1 (Home catalogue & partners marquee), and T3.2 (Businesses hero WebGL renderer) passed 99 Playwright tests. Phase 2 completed; the Drive tracker was synchronized to 69.2% as Sprint 3 began.
