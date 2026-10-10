@@ -1,88 +1,47 @@
 import { expect, test } from "@playwright/test";
 
-async function scrollSlideshowTo(page: import("@playwright/test").Page, progress: number) {
-  await page.evaluate((ratio) => {
-    const section = document.querySelector<HTMLElement>(".aboutSlideshow")!;
-    const pin = section.querySelector<HTMLElement>(".aboutSlideshowPin")!;
-    const start = window.scrollY + section.getBoundingClientRect().top;
-    const range = section.offsetHeight - pin.getBoundingClientRect().height;
-    window.scrollTo({ top: start + range * ratio, behavior: "instant" });
-  }, progress);
-}
-
 for (const locale of ["en", "id"] as const) {
-  test(`About slideshow uses the responsive presentation in ${locale}`, async ({ page }) => {
-    const route = locale === "en" ? "/about" : "/id/about";
-    const regionName = locale === "en" ? "RekanMU moments" : "Momen RekanMU";
-
-    await page.goto(route);
-    const slideshow = page.getByRole("region", { name: regionName });
-    await expect(slideshow).toBeVisible();
-    await expect(slideshow.getByRole("button")).toHaveCount(0);
-    expect(await slideshow.evaluate((section) => {
-      const parent = section.parentElement!;
-      const next = section.nextElementSibling!;
-      return [
-        getComputedStyle(parent).borderTopWidth,
-        getComputedStyle(section).borderTopWidth,
-        getComputedStyle(section).borderBottomWidth,
-        getComputedStyle(next).borderTopWidth,
-      ];
-    })).toEqual(["0px", "0px", "0px", "0px"]);
-    await expect(slideshow.locator(".aboutSlideshowSlide img")).toHaveCount(4);
-    await expect(slideshow.locator(".aboutSlideshowSlide img").first()).toHaveAttribute("src", /about-slide-1_v2\.png/);
-    await expect(slideshow.locator(".aboutSlideshowSlide img").first()).toHaveAttribute(
-      "alt",
-      locale === "en"
-        ? "The RekanMU team gathered around a conference table."
-        : "Tim RekanMU berkumpul mengelilingi meja rapat.",
-    );
-
-    if (await page.evaluate(() => window.innerWidth <= 820)) {
-      const layout = await slideshow.locator(".aboutSlideshowSlide").evaluateAll((slides) =>
-        slides.map((slide) => {
-          const style = getComputedStyle(slide);
-          const rect = slide.getBoundingClientRect();
-          return { visibility: style.visibility, position: style.position, opacity: style.opacity, top: rect.top, bottom: rect.bottom };
-        }),
-      );
-      expect(layout).toHaveLength(4);
-      expect(layout.every((slide) => slide.visibility === "visible" && slide.position === "static" && slide.opacity === "1")).toBe(true);
-      expect(layout.slice(1).every((slide, index) => slide.top >= layout[index].bottom - 1)).toBe(true);
-      expect(await slideshow.locator(".aboutSlideshowSlide img").evaluateAll((images) =>
-        images.every((image) => {
-          const rect = image.getBoundingClientRect();
-          return Math.abs(rect.left) < 1 && Math.abs(rect.width - window.innerWidth) < 1;
-        }),
-      )).toBe(true);
-      return;
+  test(`About gallery pairs its three story paragraphs with approved photos in ${locale}`, async ({ page }) => {
+    await page.goto(locale === "en" ? "/about" : "/id/about");
+    const gallery = page.getByRole("region", { name: locale === "en" ? "RekanMU moments and story" : "Momen dan kisah RekanMU" });
+    await expect(gallery).toBeVisible();
+    await expect(gallery.getByRole("button")).toHaveCount(0);
+    await expect(gallery).toHaveCSS("border-top-width", "0px");
+    await expect(gallery).toHaveCSS("border-bottom-width", "0px");
+    const photos = gallery.locator("img");
+    await expect(photos).toHaveCount(4);
+    await expect(photos.first()).toHaveAttribute("alt", locale === "en"
+      ? "The RekanMU team gathered around a conference table."
+      : "Tim RekanMU berkumpul mengelilingi meja rapat.");
+    for (let index = 0; index < 4; index++) {
+      await expect(photos.nth(index)).toHaveAttribute("src", new RegExp(`about-slide-${index + 1}_v2\\.png`));
     }
-
-    const supportsScrollTimeline = await page.evaluate(() =>
-      CSS.supports("view-timeline-name", "--about-slideshow") &&
-      CSS.supports("animation-timeline", "--about-slideshow") &&
-      CSS.supports("animation-range", "contain 0% contain 100%"),
-    );
-    test.skip(!supportsScrollTimeline, "This browser uses the static scrolling fallback");
-    await expect(slideshow.locator(".aboutSlideshowSlide img").first()).toHaveCSS("object-fit", "cover");
-
-    await scrollSlideshowTo(page, 0);
-    await expect(slideshow.locator(".aboutSlideshowSlide--1")).toHaveCSS("visibility", "visible");
-    await scrollSlideshowTo(page, 0.35);
-    await expect(slideshow.locator(".aboutSlideshowSlide--2")).toHaveCSS("visibility", "visible");
-    await expect.poll(() => slideshow.locator(".aboutSlideshowSlide--2").evaluate((slide) => Number(getComputedStyle(slide).opacity))).toBeGreaterThan(0.95);
-    await scrollSlideshowTo(page, 0.8);
-    await expect(slideshow.locator(".aboutSlideshowSlide--4")).toHaveCSS("visibility", "visible");
+    const pairs = gallery.locator(".aboutStoryPair");
+    await expect(pairs).toHaveCount(3);
+    for (let index = 0; index < 3; index++) {
+      const pair = pairs.nth(index);
+      await pair.evaluate(element => window.scrollTo(0, scrollY + element.getBoundingClientRect().top - 100));
+      await expect(pair.locator(".aboutStoryPhoto")).toBeInViewport();
+      await pair.locator("img").evaluate(async (image: HTMLImageElement) => image.decode());
+      await expect(pair.locator(".aboutStoryPhoto")).toHaveCSS("border-radius", "12px");
+      expect((await pair.locator(".aboutStoryCopy p").innerText()).length).toBeGreaterThan(50);
+      await expect.poll(() => pair.locator(".aboutStoryWord > span").evaluateAll(words => Math.min(...words.map(word => Number(getComputedStyle(word).opacity))))).toBeGreaterThan(0.99);
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   });
 }
 
-test("About slideshow remains a normal image sequence with reduced motion", async ({ page }) => {
+test("About gallery keeps photos and story readable in normal flow with reduced motion", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/about");
-
-  const slideshow = page.getByRole("region", { name: "RekanMU moments" });
-  const slides = slideshow.locator(".aboutSlideshowSlide");
-  await expect(slideshow.getByRole("button")).toHaveCount(0);
-  await expect(slides).toHaveCount(4);
-  expect(await slides.evaluateAll((elements) => elements.every((slide) => getComputedStyle(slide).visibility === "visible"))).toBe(true);
+  const pairs = page.locator(".aboutStoryPair");
+  await expect(pairs).toHaveCount(3);
+  for (let index = 0; index < 3; index++) {
+    const pair = pairs.nth(index);
+    await pair.scrollIntoViewIfNeeded();
+    await expect(pair.locator(".aboutStoryPhoto")).toHaveCSS("position", "static");
+    await expect(pair.locator(".aboutStoryCopy")).toHaveCSS("position", "static");
+    await expect(pair.locator(".aboutStoryCopy")).toBeVisible();
+    expect(await pair.locator(".aboutStoryWord > span").evaluateAll(words => words.every(word => getComputedStyle(word).animationName === "none" && Number(getComputedStyle(word).opacity) === 1))).toBe(true);
+  }
 });

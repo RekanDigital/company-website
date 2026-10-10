@@ -79,7 +79,10 @@ for (const locale of ["en", "id"] as const) {
       await expect(heroViewer).toHaveAttribute("data-business-slug", slug);
       await expect.poll(() => heroViewer.getAttribute("data-renderer-state")).toMatch(/ready|fallback/);
       if (await heroViewer.getAttribute("data-renderer-state") === "ready") {
-        await expect(page.getByRole("button", { name: locale === "en" ? "Pause rotation" : "Jeda rotasi" })).toBeVisible();
+        const control = heroViewer.locator(".businessViewerMotionControl");
+        const compact = await page.evaluate(() => matchMedia("(max-width: 1100px), (max-aspect-ratio: 1/1)").matches);
+        if (compact) await expect(control).toBeHidden();
+        else await expect(control).toBeVisible();
       } else {
         await expect(heroViewer.getByRole("button")).toHaveCount(0);
       }
@@ -320,4 +323,26 @@ test("non-home page display scales match Home across locales and breakpoints", a
       }
     }
   }
+});
+
+
+test("business viewer control follows tablet layout and orientation changes", async ({ page }) => {
+  test.skip(test.info().project.name !== "desktop");
+  await page.goto("/businesses/technology-digitalization");
+  const viewer = page.locator(".businessDetailHeroViewer");
+  await expect(viewer).toHaveAttribute("data-renderer-state", "ready", { timeout: 60_000 });
+  const control = viewer.locator(".businessViewerMotionControl");
+  await expect(control).toBeVisible();
+  await control.click();
+  await expect(control).toHaveAccessibleName("Resume rotation");
+  for (const size of [{ width: 1024, height: 1366 }, { width: 1180, height: 1366 }, { width: 1100, height: 800 }]) {
+    await page.setViewportSize(size);
+    await expect(control).toBeHidden();
+    await expect(viewer.getByRole("button")).toHaveCount(0);
+  }
+  await page.setViewportSize({ width: 1366, height: 1024 });
+  await expect(control).toBeVisible();
+  await expect(control).toHaveAccessibleName("Resume rotation");
+  await control.click();
+  await expect(control).toHaveAccessibleName("Pause rotation");
 });

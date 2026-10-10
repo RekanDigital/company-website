@@ -77,6 +77,15 @@
 .aboutStoryWord > span { display: inline-block; }
 
 @media (max-width: 820px), (max-aspect-ratio: 1/1) {
+  .aboutStoryBackdrop {
+    height: 100svh;
+    overflow: hidden;
+  }
+  .aboutStoryBackdrop img {
+    height: 100%;
+    object-fit: cover;
+    object-position: 65% center;
+  }
   .aboutStoryPair,
   .aboutStoryPair:nth-child(2) { grid-template-columns: minmax(0, 1fr); gap: 24px; }
   .aboutStoryPair:nth-child(2) .aboutStoryPhoto,
@@ -122,10 +131,11 @@
     }
     @media (max-width: 820px), (max-aspect-ratio: 1/1) {
       .aboutStoryBackdrop {
-        height: auto;
-        aspect-ratio: 2732 / 1536;
-        margin-bottom: calc(-100vw * 1536 / 2732);
+        top: 0;
+        height: 100svh;
+        margin-bottom: -100svh;
       }
+      .aboutStoryBackdrop img { object-position: 65% center; }
       .aboutStoryPairs { padding-top: 65svh; gap: 7svh; }
       .aboutStoryPair { min-height: 155svh; grid-template-rows: auto 1fr; gap: 32px; }
       .aboutStoryPhoto { top: 14svh; animation-name: about-story-pair-exit-compact; }
@@ -901,6 +911,16 @@ main:has(.productsPage) .foundationHeroCopy { margin-top: 32px; }
     font-size: clamp(28px, 4vw, 38px);
   }
   .productsPage .catalogueHeading h2 br { display: none; }
+  .productsPage .catalogueHeading h2::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset-inline: calc(-1 * var(--gutter));
+    bottom: 0;
+    height: calc(100% + 64px);
+    background: var(--ground);
+    pointer-events: none;
+  }
   .productsPage .catalogueIntro { max-width: 40em; }
   .productsPage .catalogueIntro .lead { font-size: clamp(18px, 2.2vw, 24px); }
   .productsPage .catalogueItem { padding-block: 12px; }

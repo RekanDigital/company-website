@@ -247,6 +247,12 @@
   outline-offset: 3px;
 }
 
+@media (max-width: 1100px), (max-aspect-ratio: 1/1) {
+  .businessDetailHeroViewer .businessViewerMotionControl {
+    display: none;
+  }
+}
+
 .businessCardViewer[data-ready="true"] .businessCardViewerFallback {
   opacity: 0;
 }

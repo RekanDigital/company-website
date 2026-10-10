@@ -450,7 +450,7 @@ test("unavailable WebGL restores the complete static Home shell", async ({ page 
   });
   await page.goto("/");
   const scene = page.locator("[data-home-scene]");
-  await expect(scene).toHaveAttribute("data-home-flight-mode", "static");
+  await expect(scene).toHaveAttribute("data-home-flight-mode", "static", { timeout: FLIGHT_READY_TIMEOUT });
   expect(await page.evaluate(() => Reflect.get(window, "__homeWorkerStarts"))).toBe(0);
   await expectStaticFlow(scene, page.viewportSize()!.height);
   await expect(scene.getByRole("link").filter({ hasText: "General Trading & Supply Chain" })).toBeVisible();
@@ -476,7 +476,7 @@ test("worker failure restores the complete static Home shell", async ({ page }) 
   expect(loadingFlow.positions).toEqual(["relative", "relative"]);
   expect(loadingFlow.chapterTops.every((top, index) => index === 0 || top > loadingFlow.chapterTops[index - 1])).toBe(true);
   await expect(scene).toHaveAttribute("data-home-flight-mode", "static");
-  await expect(scene.locator("[data-home-flight-hero-button]")).toHaveCSS("color", "rgb(49, 121, 203)");
+  await expect(scene.locator("[data-home-flight-hero-button]")).toHaveCSS("color", "rgb(14, 17, 22)");
   await expectStaticFlow(scene, page.viewportSize()!.height);
   await expect(scene.getByRole("link").filter({ hasText: "General Trading & Supply Chain" })).toBeVisible();
 });

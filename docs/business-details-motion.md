@@ -33,3 +33,7 @@ The four owner rules in `about-page-hard-rules.md` apply: dedicated reading comp
 Browser inspection covered all seven desktop EN and mobile ID detail routes: original row counts, next-business destinations, separator removal, and horizontal overflow. Technology desktop showed sticky heading at 96px, row movement, partially completed sequential statement words, and forward/reverse scrolling. Agriculture ID at 834×1112 stacks into one column; its capability section decreased from about 1450px to 844px. At 320px no horizontal overflow was observed. Reduced motion has no detail-body animations or hidden statement words. No errors were reported by the inspected browser log.
 
 No automated tests were run. Physical-device frame timing, other browser engines, and forced no-WebGL behavior remain unverified; renderer/fallback code is unchanged. Final design acceptance remains with the owner.
+
+## Compact viewer controls — owner revision, 10 October 2026
+
+Hide the hero viewer Pause/Resume button in compact layouts (widths up to 1100px or portrait/square aspect ratios), including mobile and tablet. Desktop landscape retains the control. Viewer rotation, reduced-motion handling, and static fallback remain as implemented.

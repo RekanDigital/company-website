@@ -67,7 +67,6 @@ export function SiteHeader({ locale }: { locale: Locale }) {
   const closeFallbackRef = useRef<number | null>(null);
   const restoreFocusRef = useRef(false);
   const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const text = siteCopy(locale);
   const items = navigation(locale);
@@ -80,13 +79,6 @@ export function SiteHeader({ locale }: { locale: Locale }) {
     window.clearTimeout(closeFallbackRef.current);
     closeFallbackRef.current = null;
   };
-
-  useEffect(() => {
-    const updateScroll = () => setScrolled(window.scrollY > 24);
-    updateScroll();
-    window.addEventListener("scroll", updateScroll, { passive: true });
-    return () => window.removeEventListener("scroll", updateScroll);
-  }, []);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -163,7 +155,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
 
   return (
     <>
-      <header className={`site-header gut${home ? " site-header--home" : ""}${open ? " site-header--menu-open" : ""}${scrolled ? " site-header--scrolled" : ""}`}>
+      <header className={`site-header gut${home ? " site-header--home" : ""}${open ? " site-header--menu-open" : ""}`}>
         <Brand locale={locale} />
         <div className="site-header__actions">
           <nav className="site-header__desktop-nav" aria-label={text.navigation}>

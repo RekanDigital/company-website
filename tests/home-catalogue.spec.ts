@@ -106,7 +106,9 @@ test("desktop Home panels follow scroll linearly and stop with the scroll", asyn
     return { top: element.getBoundingClientRect().top + window.scrollY, height: element.offsetHeight };
   });
   const viewportHeight = page.viewportSize()?.height ?? 0;
-  const travel = await track.evaluate((element) => element.scrollWidth - window.innerWidth);
+  // The keyframe's -100% is based on the track's own box; child card transforms
+  // inflate scrollWidth while the cards are rising and rotating.
+  const travel = await track.evaluate((element) => element.getBoundingClientRect().width - window.innerWidth);
   const readX = () => track.evaluate((element) => {
     const transform = getComputedStyle(element).transform;
     return transform === "none" ? 0 : new DOMMatrixReadOnly(transform).m41;
@@ -238,7 +240,12 @@ test("desktop Home catalogue counts and labels stay inside compact panel bounds"
     await page.goto(locale === "en" ? "/" : "/id");
     await waitForHomeReady(page);
     await page.evaluate(() => document.fonts.ready);
-    await page.addStyleTag({ content: ".homeCatalogueDescription { transition: none !important; }" });
+    await page.addStyleTag({
+      content: `
+        .homeCatalogueDescription { transition: none !important; }
+        .homeCataloguePanel { animation: none !important; transform: none !important; clip-path: none !important; }
+      `,
+    });
 
     for (const [width, height] of [[1440, 900], [1280, 720], [1024, 600], [901, 500]]) {
       await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());

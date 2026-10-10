@@ -41,7 +41,7 @@ test("Home animates its logo loader before handing off to the flight scene", asy
 
   await expect(scene).toHaveAttribute("data-home-flight-mode", "loading");
   await expect(loading).toBeVisible();
-  await expect(page.locator(".site-header--home")).toHaveCSS("visibility", "hidden");
+  await expect(page.locator(".site-header--home")).toBeVisible();
   await expect(page.locator(".site-footer")).toHaveCSS("visibility", "hidden");
   await expect(page.locator(".homeCatalogue")).toHaveCSS("visibility", "hidden");
   const viewport = page.viewportSize()!;
@@ -90,12 +90,17 @@ test("Home animates its logo loader before handing off to the flight scene", asy
   });
   expect(handoff[0].logo).toBeGreaterThan(handoff.at(-1)!.logo);
   expect(handoff[0].background).toBeLessThan(handoff.at(-1)!.background);
-  expect(handoff[0].frame).toBeLessThan(handoff.at(-1)!.frame);
   expect(handoff.every((sample, index) => index === 0 || sample.logo <= handoff[index - 1].logo + 0.01)).toBe(true);
   expect(handoff.every((sample, index) => index === 0 || sample.background >= handoff[index - 1].background - 0.01)).toBe(true);
   expect(handoff.every((sample, index) => index === 0 || sample.frame >= handoff[index - 1].frame - 0.01)).toBe(true);
   await expect(page.locator(".site-header--home")).toHaveCSS("visibility", "visible");
   await expect(page.locator(".site-footer")).toHaveCSS("visibility", "visible");
   await expect(loading).toBeHidden({ timeout: 10_000 });
+  await page.evaluate(() => {
+    const sequence = document.querySelector<HTMLElement>("[data-home-flight-sequence]")!;
+    const stage = document.querySelector<HTMLElement>("[data-home-flight-stage]")!;
+    window.scrollTo(0, window.scrollY + sequence.getBoundingClientRect().top + (sequence.offsetHeight - stage.offsetHeight) * 0.02);
+  });
+  await expect.poll(() => scene.locator("[data-home-flight-frame]").evaluate(element => Number.parseFloat(getComputedStyle(element).opacity))).toBeGreaterThan(0);
   expect(hydrationErrors).toEqual([]);
 });

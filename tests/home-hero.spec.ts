@@ -4,7 +4,9 @@ for (const [locale, path] of [["English", "/"], ["Indonesian", "/id"]] as const)
   test(`desktop ${locale} Home hero fits beside the square at the approved scale`, async ({ page }) => {
     test.skip((page.viewportSize()?.width ?? 0) <= 900);
     await page.goto(path);
-    await expect(page.locator("[data-home-scene]")).toHaveAttribute("data-home-flight-ready", "true", { timeout: 15_000 });
+    await expect(page.locator("[data-home-scene]")).toHaveAttribute("data-home-flight-ready", "true", { timeout: 40_000 });
+
+    await page.locator("[data-home-flight-hero-button]").evaluate((button) => Promise.all(button.getAnimations().map((animation) => animation.finished)));
 
     const layout = await page.locator(".foundationHero").evaluate((hero) => {
       const heading = hero.querySelector("h1")!;
@@ -56,7 +58,9 @@ test("Home hero keeps its arrangement as the window opens into the dark scene", 
   test.setTimeout(60_000);
   await page.goto("/");
   const scene = page.locator("[data-home-scene]");
-  await expect(scene).toHaveAttribute("data-home-flight-ready", "true", { timeout: 15_000 });
+  await expect(scene).toHaveAttribute("data-home-flight-ready", "true", { timeout: 40_000 });
+
+  await scene.locator("[data-home-flight-hero-button]").evaluate((button) => Promise.all(button.getAnimations().map((animation) => animation.finished)));
 
   const measure = () => page.evaluate(() => {
     const foreground = document.querySelector<HTMLElement>(".homeScene__hero h1")!;

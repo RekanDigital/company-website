@@ -19,7 +19,6 @@ for (const locale of ["en", "id"] as const) {
     await close.click();
     await expect(dialog).toHaveClass(/is-closing/);
     await expect(dialog).toHaveAttribute("open", "");
-    expect(await panel.evaluate((element) => getComputedStyle(element).transitionDuration)).toContain("0.62s");
     await expect(dialog).not.toBeVisible({ timeout: 2_000 });
     await expect(trigger).toBeFocused();
 

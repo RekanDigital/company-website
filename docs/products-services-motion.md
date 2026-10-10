@@ -20,3 +20,7 @@ Apply the four rules recorded in `about-page-hard-rules.md`: dedicated reading s
 Browser inspection covered desktop EN at 1440×900, mobile ID at 390×844, portrait tablet at 834×1112, and wide landscape at 1280×800. All 54 catalogue entries remained. The desktop introduction was observed sticking at 96px while the catalogue advanced, and mobile category context at 64px after its introduction scrolled away. A stream link landed at its existing target. Checked horizontal overflow, removed borders, heading fit, and reduced motion (all catalogue entries visible, no active product animations).
 
 No automated tests were run. Physical-device frame timing and other browser engines remain unverified.
+
+## Sticky category masking repair — 10 October 2026
+
+Compact sticky headings now paint an opaque ground-colored backdrop through the 64px region above the title and across both page gutters. This prevents outgoing catalogue text appearing above the active category. The backdrop follows the native sticky heading and its section bounds, accepts no pointer events, and applies in normal and reduced motion. Desktop split-column styling stays unchanged.

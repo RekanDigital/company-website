@@ -14,7 +14,8 @@ Owner accepted 9 October 2026. Applies to `/about` and `/id/about`.
 
 ## Responsive and accessibility behavior
 
-- At widths up to 820px or portrait aspect ratios, photos keep natural proportions and alternate horizontal alignment above their corresponding paragraphs.
+- At widths up to 820px or portrait aspect ratios, photos 2–4 keep natural proportions and alternate horizontal alignment above their corresponding paragraphs.
+- Owner-directed repair, 10 October 2026: the first background photo fills the compact viewport edge-to-edge with a `cover` crop focused at 65% horizontally. Do not reserve the desktop header strip on compact screens. This framing also applies to reduced-motion and unsupported-timeline layouts; photos 2–4 retain their existing presentation.
 - Reduced motion and browsers without supported scroll timelines show all photos and paragraphs in normal flow.
 - Existing English/Indonesian copy, photo assets, and alt text are preserved.
 - This lock supersedes the previous standalone four-photo slideshow and three-column story arrangement. Other About sections retain their current behavior.

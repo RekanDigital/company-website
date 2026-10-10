@@ -11,12 +11,14 @@
 }
 
 .site-header {
-  position: relative;
+  position: sticky;
+  top: 0;
   z-index: 20;
+  background-color: var(--ground);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-block: 20px;
+  padding-block: 10px;
 }
 
 .site-brand {
@@ -495,15 +497,6 @@
 }
 
 @media (min-width: 821px) {
-  .site-header {
-    position: sticky;
-    top: 0;
-    padding-block: 10px;
-    background-color: transparent;
-    transition: background-color .25s var(--ease-standard);
-  }
-
-  .site-header--scrolled { background-color: var(--ground); }
   .site-header__desktop-nav { display: flex; }
   .site-menu-button { display: none; }
 }

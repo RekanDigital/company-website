@@ -58,7 +58,7 @@ export function HomeScene({ locale }: { locale: Locale }) {
     const header = document.querySelector<HTMLElement>(".site-header--home");
     const brandLogo = header?.querySelector<HTMLImageElement>(".site-brand img");
     const headerTextNodes = [...(header?.querySelectorAll<HTMLElement>(
-      ".site-brand span, .site-header__link, .site-menu-button__label, .site-menu-mark",
+      ".site-brand span, .site-header__link, .site-menu-button__label, .site-menu-mark, .site-menu-toggle",
     ) ?? [])];
     const contrastTextNodes = [...headerTextNodes, ...(heroButton ? [heroButton] : [])];
     const chapters = [...(root?.querySelectorAll<HTMLElement>("[data-home-flight-chapter]") ?? [])];
@@ -166,9 +166,8 @@ export function HomeScene({ locale }: { locale: Locale }) {
       root.dataset.homeLoadingState = "done";
       delete root.dataset.homeFlightReady;
       delete header?.dataset.homeFlightHeader;
-      delete header?.dataset.homeFlightHeaderHidden;
+      delete header?.dataset.homeFlightHeaderOutside;
       contrastTextNodes.forEach((node) => { delete node.dataset.homeFlightDark; });
-      if (brandLogo) brandLogo.style.opacity = "";
       chapters.forEach((chapter) => { chapter.inert = false; });
       if (heroButton) {
         heroButton.inert = false;
@@ -221,7 +220,7 @@ export function HomeScene({ locale }: { locale: Locale }) {
       const total = sequence.offsetHeight - stage.offsetHeight;
       const rect = sequence.getBoundingClientRect();
       P = total > 0 ? clamp(-rect.top / total) : 0;
-      if (header) header.dataset.homeFlightHeaderHidden = rect.bottom <= 0 ? "true" : "false";
+      if (header) header.dataset.homeFlightHeaderOutside = String(rect.bottom <= 0);
       if (observer && visible && !document.hidden && !frameId) frameId = requestAnimationFrame(renderFrame);
     };
 
@@ -297,11 +296,6 @@ export function HomeScene({ locale }: { locale: Locale }) {
       logo.style.width = `${(right - left).toFixed(1)}px`;
       logo.style.height = `${(bottom - top).toFixed(1)}px`;
       logo.style.opacity = exit > 0 ? String(smooth(0.86, 1, exit)) : String(1 - fade);
-      if (brandLogo) {
-        brandLogo.style.opacity = Ps > 0.05 && exit < 1
-          ? String(exit > 0 ? 1 - smooth(0, 0.12, exit) : 1)
-          : "1";
-      }
       const inside = enter >= 0.999;
       contrastTextPositions.forEach(({ node, x, y }) => {
         const dark = x >= left && x <= right && y >= top && y <= bottom;
@@ -491,9 +485,8 @@ export function HomeScene({ locale }: { locale: Locale }) {
       document.removeEventListener("visibilitychange", onVisibility);
       motion.removeEventListener("change", onMotionChange);
       delete header?.dataset.homeFlightHeader;
-      delete header?.dataset.homeFlightHeaderHidden;
+      delete header?.dataset.homeFlightHeaderOutside;
       contrastTextNodes.forEach((node) => { delete node.dataset.homeFlightDark; });
-      if (brandLogo) brandLogo.style.opacity = "";
       if (world) {
         world.scene.traverse((object: import("three").Object3D) => {
           const resource = object as typeof object & { geometry?: { dispose: () => void }; material?: import("three").Material | import("three").Material[] };
